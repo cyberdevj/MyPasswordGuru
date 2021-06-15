@@ -26,6 +26,7 @@ const AccountPersonal = (props) => {
                 <label>Company</label>
                 <input type="text" name="company" placeholder="Company" defaultValue={props.company} />
             </div>
+            <button className="ui icon button positive"><i className="save outline icon"></i></button>
         </div>
     );
 };
