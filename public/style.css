@@ -1,0 +1,25 @@
+body {
+    min-width: 600px;
+    min-height: 500px;
+    padding-top: 20px; 
+}
+
+.center-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.color-grey {
+    color: #808080;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.new-line {
+    white-space: pre-line;
+}

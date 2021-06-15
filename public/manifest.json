@@ -1,0 +1,16 @@
+{
+	"name": "My Password Guru",
+	"description": "A password locker that generates your password based on your personalization and interest.",
+	"version": "1.0",
+	"manifest_version": 3,
+	"permissions": [],
+	"action": {
+		"default_popup": "index.html",
+		"default_title": "My Password Guru"
+	},
+	"icons": {
+		"16": "logo192.png",
+		"48": "logo192.png",
+		"128": "logo192.png"
+	}
+}
