@@ -8,7 +8,10 @@ const PasswordNew = () => {
                 <div className="sub header">Your newly generated password will appear here.</div>
             </h3>
             <div className="field">
-                <input type="text" name="newPassword" />
+                <div className="ui icon input">
+                    <input type="text" name="newPassword" />
+                    <i className="copy outline icon"></i>
+                </div>
             </div>
         </div>
     );
