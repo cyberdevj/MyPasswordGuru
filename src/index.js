@@ -9,8 +9,9 @@ import ReactDOM from 'react-dom';
 import Nav from './component/Nav';
 import GenerateNav from './component/GenerateNav';
 import Login from './component/Login';
-import Passwords from './component/Passwords';
-import PasswordsId from './component/PasswordsId';
+import LoginAccountEdit from './component/LoginAccountEdit';
+import LoginAccountView from './component/LoginAccountView';
+import LoginAccountList from './component/LoginAccountList';
 import GenerateBasic from './component/GenerateBasic';
 import GenerateEnhanced from './component/GenerateEnhanced';
 import GenerateCustom from './component/GenerateCustom';
@@ -22,14 +23,24 @@ const App = () => {
     return (
         <Router>
             <Switch>
-                <Route path="/passwords/id">
+                <Route path="/login/new">
                     <Nav>
-                        <PasswordsId />
+                        <LoginAccountEdit />
                     </Nav>
                 </Route>
-                <Route path="/passwords">
+                <Route path="/login/edit">
                     <Nav>
-                        <Passwords />
+                        <LoginAccountEdit />
+                    </Nav>
+                </Route>
+                <Route path="/login/view">
+                    <Nav>
+                        <LoginAccountView />
+                    </Nav>
+                </Route>
+                <Route path="/login/list">
+                    <Nav>
+                        <LoginAccountList />
                     </Nav>
                 </Route>
                 <Route path="/generate/basic">

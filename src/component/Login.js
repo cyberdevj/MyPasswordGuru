@@ -13,7 +13,7 @@ class Login extends React.Component {
                         <label>PIN</label>
                         <input type="text" name="pin" placeholder="pin" />
                     </div>
-                    <Link className="ui primary submit button w-250" to="/passwords">Login</Link>
+                    <Link className="ui primary submit button w-250" to="/login/list">Login</Link>
                 </div>
             </div>
         );

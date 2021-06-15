@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const PasswordsItem = (props) => {
+const LoginAccountItem = (props) => {
     return (
         <Link className="item" to={props.url}>
             <img className="ui avatar image" alt="Brands" src={props.accountImage} />
@@ -13,4 +13,4 @@ const PasswordsItem = (props) => {
     );
 };
 
-export default PasswordsItem;
+export default LoginAccountItem;
