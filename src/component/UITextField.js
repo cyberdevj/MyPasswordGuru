@@ -1,17 +1,27 @@
 import React from "react";
 
-const UITextField = (props) => {
-    if (props.label == null) {
-        return (
-            <div className="field">
-                <input type={props.type} name={props.name} placeholder={props.placeholder} defaultValue={props.defaultValue}/>
-            </div>
-        );
+const renderLabel = (label) => {
+    if (label != null) {
+        return <label>{label}</label>;
     }
+    return null;
+};
+
+const renderIcon = (iconCss) => {
+    if (iconCss != null) {
+        return <i className={iconCss}></i>;
+    }
+    return null;
+}
+
+const UITextField = (props) => {
     return (
         <div className="field">
-            <label>{props.label}</label>
-            <input type={props.type} name={props.name} placeholder={props.placeholder} defaultValue={props.defaultValue}/>
+            {renderLabel(props.label)}
+            <div className="ui input icon">
+                <input type={props.type} name={props.name} placeholder={props.placeholder} defaultValue={props.defaultValue}/>
+                {renderIcon(props.iconCss)}
+            </div>
         </div>
     );
 };

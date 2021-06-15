@@ -15,13 +15,13 @@ class PasswordsId extends React.Component {
                 <UISegmentWithProfilePicture src={faker.image.image()}>
                     <div className="header">{faker.company.companyName()}</div>
                     <div className="description">
-                        <a className="ui fluid button" href="#">Go to Login Page</a>
+                        <button className="ui fluid button">Go to Login Page</button>
                     </div>
                 </UISegmentWithProfilePicture>
 
                 <UISegmentWithHeader header="Credentials">
                     <UITextField label="Username" type="text" name="username" defaultValue={faker.internet.userName()} />
-                    <UITextField label="Password" type="password" name="username" defaultValue={faker.internet.userName()} />
+                    <UITextField label="Password" type="password" name="username" defaultValue={faker.internet.userName()} iconCss="copy outline icon" />
                 </UISegmentWithHeader>
 
                 <UISegmentWithHeader header="One Time Password">
@@ -29,7 +29,7 @@ class PasswordsId extends React.Component {
                 </UISegmentWithHeader>
                 
                 <UISegmentWithHeader header="URL">
-                    <UITextField label="URI 1" type="text" name="uri1" defaultValue={faker.internet.url()} />
+                    <UITextField label="URI 1" type="text" name="uri1" defaultValue={faker.internet.url()} iconCss="external alternate icon" />
                 </UISegmentWithHeader>
             </form>
         );
