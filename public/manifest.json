@@ -3,7 +3,9 @@
 	"description": "A password locker that generates your password based on your personalization and interest.",
 	"version": "1.0",
 	"manifest_version": 3,
-	"permissions": [],
+	"permissions": [
+		"storage"
+	],
 	"action": {
 		"default_popup": "index.html",
 		"default_title": "My Password Guru"
