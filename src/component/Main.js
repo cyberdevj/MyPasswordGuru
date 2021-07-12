@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-class Login extends React.Component {
+class Main extends React.Component {
     render() {
         return (
             <div className="ui center-screen">
@@ -13,11 +13,12 @@ class Login extends React.Component {
                         <label>PIN</label>
                         <input type="text" name="pin" placeholder="pin" />
                     </div>
-                    <Link className="ui primary submit button w-250" to="/login/list">Login</Link>
+                    <Link className="ui primary submit button" to="/login/list">Login</Link>
+                    <Link className="ui button" to="/login/list">New</Link>
                 </div>
             </div>
         );
     };
 };
 
-export default Login
+export default Main
