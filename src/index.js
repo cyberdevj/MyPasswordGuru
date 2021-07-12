@@ -8,7 +8,7 @@ import {
 import ReactDOM from 'react-dom';
 import Nav from './component/Nav';
 import GenerateNav from './component/GenerateNav';
-import Login from './component/Login';
+import Main from './component/Main';
 import LoginAccountEdit from './component/LoginAccountEdit';
 import LoginAccountView from './component/LoginAccountView';
 import LoginAccountList from './component/LoginAccountList';
@@ -75,7 +75,7 @@ const App = () => {
                     </Nav>
                 </Route>
                 <Route path="/">
-                    <Login />
+                    <Main />
                 </Route>
             </Switch>
             <br />
