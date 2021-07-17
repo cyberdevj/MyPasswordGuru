@@ -16,6 +16,7 @@ import GenerateBasic from './component/GenerateBasic';
 import GenerateEnhanced from './component/GenerateEnhanced';
 import GenerateCustom from './component/GenerateCustom';
 import Account from './component/Account';
+import AccountNew from './component/AccountNew';
 import Personalize from './component/Personalize';
 
 
@@ -68,6 +69,9 @@ const App = () => {
                     <Nav>
                         <Personalize />
                     </Nav>
+                </Route>
+                <Route path="/account/new">
+                    <AccountNew />
                 </Route>
                 <Route path="/account">
                     <Nav>
