@@ -7,7 +7,7 @@ const UISegmentWithProfilePicture = (props) => {
             <div className="ui items">
                 <div className="item">
                     <div className="ui tiny image">
-                        <img alt="ProfilePicture" src={props.src} />
+                        <img alt="" src={props.src} />
                     </div>
                     <div className="content">
                         {props.children}
