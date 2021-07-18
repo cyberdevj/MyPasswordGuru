@@ -1,24 +1,52 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import faker from "faker";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import LoginAccountItem from "./LoginAccountItem";
+import AuthenticationService from "./AuthenticationService";
 
-class LoginAccountList extends React.Component {
-    render() {
-        return (
-            <div className="ui">
-                <h3>Your Login Account List</h3>
-                <Link className="ui button" to="/login/new">Add</Link>
-                <div className="ui celled list">
-                    <LoginAccountItem accountImage={faker.image.image()} companyName={faker.company.companyName()} username={faker.internet.userName()} url="/login/view" />
-                    <LoginAccountItem accountImage={faker.image.image()} companyName={faker.company.companyName()} username={faker.internet.userName()} url="/login/view" />
-                    <LoginAccountItem accountImage={faker.image.image()} companyName={faker.company.companyName()} username={faker.internet.userName()} url="/login/view" />
-                    <LoginAccountItem accountImage={faker.image.image()} companyName={faker.company.companyName()} username={faker.internet.userName()} url="/login/view" />
-                    <LoginAccountItem accountImage={faker.image.image()} companyName={faker.company.companyName()} username={faker.internet.userName()} url="/login/view" />
+const LoginAccountList = () => {
+    const history = useHistory();
+    const [logins, setLogin] = useState([]);
+
+    const loginAccountList = () => {
+        let loginAccountList = [];
+        if (logins.length === 0) {
+            loginAccountList.push(
+                <div key="0" className="ui yellow message">
+                    No login account
                 </div>
-            </div>
-        );
+            );
+        }
+        for (let i in logins) {
+            loginAccountList.push(<LoginAccountItem key={logins[i]["id"]} favicon={AuthenticationService.getFaviconUrl(logins[i]["url"])} name={logins[i]["name"]} username={logins[i]["username"]} url={`/login/view/${logins[i]["id"]}`} />);
+        }
+        return loginAccountList;
     }
+
+    useEffect(() => {
+        if (!AuthenticationService.sessionValid())
+            history.push("/");
+        
+        let result = AuthenticationService.get("logins");
+        if (result["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+
+        if (result["data"])
+            setLogin(result["data"]);
+    }, [history]);
+
+    
+
+    return (
+        <div className="ui">
+            <h3>Your Logins</h3>
+            <Link className="ui button" to="/login/new">Add</Link>
+            <div className="ui celled list">
+                {loginAccountList()}
+            </div>
+        </div>
+    );
 }
 
 export default LoginAccountList;
