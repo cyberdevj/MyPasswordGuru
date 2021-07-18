@@ -19,7 +19,7 @@ const UITextField = (props) => {
         <div className="field">
             {renderLabel(props.label)}
             <div className="ui input icon">
-                <input type={props.type} name={props.name} placeholder={props.placeholder} defaultValue={props.defaultValue} readOnly={props.isReadOnly} />
+                <input type={props.type} name={props.name} placeholder={props.placeholder} defaultValue={props.defaultValue} onChange={props.onChange} onBlur={props.onBlur} readOnly={props.isReadOnly} />
                 {renderIcon(props.iconCss)}
             </div>
         </div>
