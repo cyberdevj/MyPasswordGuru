@@ -12,7 +12,7 @@ const AccountNew = () => {
     const createNewUser = (e) => {
         e.preventDefault();
 
-        AuthenticationService.setAuth({
+        AuthenticationService.generateEncryptedAuthObj({
             "username": username,
             "data": {
                 "profile": {
