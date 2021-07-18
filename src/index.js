@@ -29,12 +29,12 @@ const App = () => {
                         <LoginAccountEdit />
                     </Nav>
                 </Route>
-                <Route path="/login/edit">
+                <Route path="/login/edit/:id">
                     <Nav>
                         <LoginAccountEdit />
                     </Nav>
                 </Route>
-                <Route path="/login/view">
+                <Route path="/login/view/:id">
                     <Nav>
                         <LoginAccountView />
                     </Nav>
