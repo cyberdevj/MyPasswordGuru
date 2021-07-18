@@ -1,60 +1,136 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import faker from "faker";
-import UISegmentWithProfilePicture from "./UISegmentWithProfilePicture";
+import UISegment from "./UISegment";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
+import AuthenticationService from "./AuthenticationService";
 
 const LoginAccountEdit = () => {
-    let account = {
-        title: "Add New Account",
-        name: null,
-        username: null,
-        password: null,
-        otp: null,
-        url: null,
-        prevLocation: "/login/list"
+    const [title, setTitle] = useState("Add New Login");
+    const [name, setName] = useState(null);
+    const [username, setUsername] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [otp, setOtp] = useState(null);
+    const [url, setUrl] = useState(null);
+    const [prevlink, setPrevlink] = useState("/login/list");
+
+    const history = useHistory();
+    const location = useLocation().pathname;
+    const params = useParams();
+
+    const isEdit = () => {
+        return (location.includes("login") && location.includes("edit"));
     };
 
-    const location = useLocation().pathname;
-    if (location.includes("login") && location.includes("edit")) {
-        account = {
-            title: "Edit Account Information",
-            name: faker.company.companyName(),
-            username: faker.internet.userName(),
-            password: faker.internet.password(),
-            otp: faker.datatype.number(999999),
-            url: faker.internet.url(),
-            prevLocation: "/login/view"
-        };
-    }
+    const addLogin = () => {
+        let result = AuthenticationService.get("logins");
+        if (result["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+
+        let data = result["data"];
+        if (!data)
+            data = [];
+        
+        let id = AuthenticationService.getLastId(data);
+        id++;
+        data.push({
+            id: id,
+            name: name,
+            username: username,
+            password: password,
+            otp: otp,
+            url: url
+        });
+
+        AuthenticationService.set("logins", data);
+        history.push(prevlink);
+    };
+
+    const editLogin = () => {
+        let logins = AuthenticationService.get("logins");
+        if (logins["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+
+        let data = AuthenticationService.updateItemFromList(params["id"], logins["data"], {
+            id: parseInt(params["id"]),
+            name: name,
+            username: username,
+            password: password,
+            otp: otp,
+            url: url
+        });
+
+        let saveResult = AuthenticationService.set("logins", data);
+        if (saveResult["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+        history.push(`${prevlink}/${params["id"]}`);
+    };
+
+    const processLogin = (e) => {
+        e.preventDefault();
+        if (isEdit())
+            editLogin();
+        else
+            addLogin();
+    };
+
+    useEffect(() => {
+        if (!AuthenticationService.sessionValid())
+            history.push("/");
+
+        if (!isEdit())
+            return;
+        
+        let logins = AuthenticationService.get("logins");
+        if (logins["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+
+        let data = AuthenticationService.getItemFromList(params["id"], logins["data"]);
+        setTitle("Edit Login");
+        setName(data["name"]);
+        setUsername(data["username"]);
+        setPassword(data["password"]);
+        setOtp(data["otp"]);
+        setUrl(data["url"]);
+        setPrevlink("/login/view");
+    }, [history]);
 
     return (
         <form className="ui form">
         <h1 className="ui header">
-            <div className="ui content">{account.title}</div>
+            <div className="ui content">{title}</div>
         </h1>
         
-        <UISegmentWithProfilePicture src={faker.image.image()}>
-            <UITextField label="Account Name" type="text" name="accountName" defaultValue={account.name} />
-        </UISegmentWithProfilePicture>
+        <UISegment>
+            <UITextField label="Name" type="text" name="name" defaultValue={name} onChange={e => setName(e.target.value)} />
+        </UISegment>
 
         <UISegmentWithHeader header="Credentials">
-            <UITextField label="Username" type="text" name="username" defaultValue={account.username} />
-            <UITextField label="Password" type="password" name="password" iconCss="copy outline icon" defaultValue={account.password} />
+            <UITextField label="Username" type="text" name="username" defaultValue={username} onChange={e => setUsername(e.target.value)} />
+            <UITextField label="Password" type="password" name="password" iconCss="copy outline icon" defaultValue={password} onChange={e => setPassword(e.target.value)} />
         </UISegmentWithHeader>
 
         <UISegmentWithHeader header="One Time Password">
-            <UITextField type="text" name="oneTimePassword" defaultValue={account.otp} />
+            <UITextField type="text" name="oneTimePassword" defaultValue={otp} />
         </UISegmentWithHeader>
         
         <UISegmentWithHeader header="URL">
-            <UITextField type="text" name="uri" iconCss="external alternate icon" defaultValue={account.url} />
+            <UITextField type="text" name="uri" iconCss="external alternate icon" defaultValue={url} onChange={e => setUrl(e.target.value)} />
         </UISegmentWithHeader>
 
-        
-        <Link className="ui icon button positive" to={account.prevLocation}><i className="save outline icon"></i></Link>
-        <Link className="ui icon button" to={account.prevLocation}><i className="window close outline icon"></i></Link>
+        <div className="ui right floated">
+            <button className="ui icon button positive" onClick={processLogin}><i className="save outline icon"></i></button>
+            <Link className="ui icon button" to={prevlink}><i className="window close outline icon"></i></Link>
+        </div>
     </form>
     );
 };
