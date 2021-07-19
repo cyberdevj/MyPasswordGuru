@@ -12,11 +12,11 @@ const renderIcon = (iconCss) => {
         return <i className={iconCss}></i>;
     }
     return null;
-}
+};
 
 const UITextField = (props) => {
     return (
-        <div className="field">
+        <div className={`field ${props.className}`}>
             {renderLabel(props.label)}
             <div className="ui input icon">
                 <input type={props.type} name={props.name} placeholder={props.placeholder} defaultValue={props.defaultValue} onChange={props.onChange} onBlur={props.onBlur} readOnly={props.isReadOnly} />
