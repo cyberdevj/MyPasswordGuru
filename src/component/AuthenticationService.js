@@ -132,14 +132,14 @@ const AuthenticationService = {
     },
     getItemFromList: function(id, list) {
         for (let i in list)
-            if (list[i]["id"] === parseInt(id))
-                return list[i];
+        if (list[i]["id"] === parseInt(id))
+        return list[i];
         return null;
     },
     updateItemFromList: function(id, list, value) {
         for (let i in list)
-            if (list[i]["id"] === parseInt(id))
-                list[i] = value;
+        if (list[i]["id"] === parseInt(id))
+        list[i] = value;
         return list;
     },
     getLastId: function(data) {
