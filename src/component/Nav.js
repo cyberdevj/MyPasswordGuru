@@ -31,7 +31,7 @@ const Nav = (props) => {
                 <Link className={account} to="/login/list" onClick={e => setAccount("item active")}>Your Logins</Link>
                 <Link className={generate} to="/generate/basic">Generate</Link>
                 <Link className={settings} to="/account">Account</Link>
-                <button className="ui link button item" onClick={e => lockAccount}>Lock</button>
+                <button className="ui link button item" onClick={lockAccount}>Lock</button>
             </div>
             {props.children}
         </div>
