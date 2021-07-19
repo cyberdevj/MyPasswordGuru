@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useHistory, useLocation, useParams } from "react-router-dom";
-import faker from "faker";
 import UISegment from "./UISegment";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
@@ -19,9 +18,9 @@ const LoginAccountEdit = () => {
     const location = useLocation().pathname;
     const params = useParams();
 
-    const isEdit = () => {
+    const isEdit = useCallback(() => {
         return (location.includes("login") && location.includes("edit"));
-    };
+    }, [location]);
 
     const addLogin = () => {
         let result = AuthenticationService.get("logins");
@@ -82,9 +81,6 @@ const LoginAccountEdit = () => {
     };
 
     useEffect(() => {
-        if (!AuthenticationService.sessionValid())
-            history.push("/");
-
         if (!isEdit())
             return;
         
@@ -102,7 +98,7 @@ const LoginAccountEdit = () => {
         setOtp(data["otp"]);
         setUrl(data["url"]);
         setPrevlink("/login/view");
-    }, [history]);
+    }, [history, params, isEdit]);
 
     return (
         <form className="ui form">

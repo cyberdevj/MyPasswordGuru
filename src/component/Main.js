@@ -28,7 +28,7 @@ const Main = () => {
         let result = AuthenticationService.getUser();
         if (result)
             setUsername(result["data"]);
-    }, []);
+    }, [history]);
 
     return (
         <div className="ui center-screen">

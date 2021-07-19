@@ -4,8 +4,9 @@ import LoginAccountItem from "./LoginAccountItem";
 import AuthenticationService from "./AuthenticationService";
 
 const LoginAccountList = () => {
-    const history = useHistory();
     const [logins, setLogin] = useState([]);
+
+    const history = useHistory();
 
     const loginAccountList = () => {
         let loginAccountList = [];
@@ -20,12 +21,9 @@ const LoginAccountList = () => {
             loginAccountList.push(<LoginAccountItem key={logins[i]["id"]} favicon={AuthenticationService.getFaviconUrl(logins[i]["url"])} name={logins[i]["name"]} username={logins[i]["username"]} url={`/login/view/${logins[i]["id"]}`} />);
         }
         return loginAccountList;
-    }
+    };
 
-    useEffect(() => {
-        if (!AuthenticationService.sessionValid())
-            history.push("/");
-        
+    useEffect(() => {        
         let result = AuthenticationService.get("logins");
         if (result["status"] !== "OK") {
             AuthenticationService.sessionDestroy();
@@ -35,8 +33,6 @@ const LoginAccountList = () => {
         if (result["data"])
             setLogin(result["data"]);
     }, [history]);
-
-    
 
     return (
         <div className="ui">

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import faker from "faker";
 import UISegmentWithProfilePicture from "./UISegmentWithProfilePicture";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
@@ -12,20 +11,6 @@ const LoginAccountView = () => {
     const history = useHistory();
     const params = useParams();
 
-    useEffect(() => {
-        if (!AuthenticationService.sessionValid())
-            history.push("/");
-
-        let logins = AuthenticationService.get("logins");
-        if (logins["status"] !== "OK") {
-            AuthenticationService.sessionDestroy();
-            history.push("/");
-        }
-
-        let data = AuthenticationService.getItemFromList(params["id"], logins["data"]);
-        setLogin(data);
-    }, []);
-
     const deleteLogin = (e) => {
         e.preventDefault();
         let logins = AuthenticationService.get("logins");
@@ -36,6 +21,17 @@ const LoginAccountView = () => {
         AuthenticationService.set("logins", logins);
         history.push("/login/list");
     };
+
+    useEffect(() => {
+        let logins = AuthenticationService.get("logins");
+        if (logins["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+
+        let data = AuthenticationService.getItemFromList(params["id"], logins["data"]);
+        setLogin(data);
+    }, [history, params]);
 
     return (
         <form className="ui form">

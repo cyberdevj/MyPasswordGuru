@@ -1,37 +1,41 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import faker from "faker";
-import Logout from "./Logout";
 import AccountPersonal from "./AccountPersonal";
 import AccountInterest from "./AccountInterest";
+import AuthenticationService from "./AuthenticationService";
 
-class Account extends React.Component {
-    state = { fullname: "" };
+const Account = () => {
+    const [fullname, setFullname] = useState(null);
 
-    componentDidMount() {
-        const fullname = faker.name.firstName() + " " + faker.name.lastName();
-        this.setState({ fullname: fullname })
-    }
+    const history = useHistory();
 
-    render() {
-        return (
-            <form className="ui form">
-                <div className="ui tiny">
-                    You can provide additional information to Guru to improve your password suggestions. You are in control of your data, and you can swipe any item to the left to delete it.
-                    <br />
-                    <br />
-                    This data is stored on your device and is never sent to a server.
-                </div>
+    useEffect(() => {
+        let profileResult = AuthenticationService.get("profile");
+        if (profileResult["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
 
-                <Logout />
+        let data = profileResult["data"];
+        setFullname(data["fullname"]);
+    }, [history]);
 
-                <AccountPersonal fullname={this.state.fullname} region={faker.address.country()} language="English, Chinese, Japanese" age={Math.floor(Math.random() * 82) + 18} company={faker.company.companyName()} />
-                <AccountInterest />
+    return (
+        <form className="ui form">
+            <div className="ui tiny">
+                You can provide additional information to Guru to improve your password suggestions. You are in control of your data, and you can swipe any item to the left to delete it.
+                <br />
+                <br />
+                This data is stored on your device and is never sent to a server.
+            </div>
 
-                <Link className="fluid ui button" to="/account/personalize">Personalize</Link>
-            </form>
-        );
-    }
+            <AccountPersonal fullname={fullname} region={faker.address.country()} language="English, Chinese, Japanese" age={Math.floor(Math.random() * 82) + 18} company={faker.company.companyName()} />
+            <AccountInterest />
+
+            <Link className="fluid ui button" to="/account/personalize">Personalize</Link>
+        </form>
+    );
 }
 
 export default Account;
