@@ -20,6 +20,11 @@ const Main = () => {
     };
 
     useEffect(() => {
+        if (AuthenticationService.sessionValid()) {
+            history.push("/login/list");
+            return;
+        }
+
         let result = AuthenticationService.getUser();
         if (result)
             setUsername(result["data"]);
