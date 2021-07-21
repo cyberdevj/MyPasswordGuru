@@ -12,7 +12,7 @@ const Account = () => {
     const [fullname, setFullname] = useState(null);
     const [country, setCountry] = useState(null);
     const [language, setLanguage] = useState(null);
-    const [birthdate, setBirthdate] = useState(new Date());
+    const [birthdate, setBirthdate] = useState(null);
     const [company, setCompany] = useState(null);
     const [saved, setSaved] = useState(false);
 
@@ -44,7 +44,7 @@ const Account = () => {
         setFullname(data["fullname"]);
         setCountry(data["country"]);
         setLanguage(data["language"]);
-        setBirthdate(new Date(data["birthdate"]));
+        setBirthdate(data["birthdate"] ? new Date(data["birthdate"]) : new Date());
         setCompany(data["company"]);
     }, []);
 
