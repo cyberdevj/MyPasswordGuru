@@ -1,7 +1,7 @@
 {
 	"name": "My Password Guru",
 	"description": "A password locker that generates your password based on your personalization and interest.",
-	"version": "alpha-1.5",
+	"version": "1.5",
 	"manifest_version": 3,
 	"permissions": [
 		"storage"
@@ -10,16 +10,9 @@
 		"default_popup": "index.html",
 		"default_title": "My Password Guru"
 	},
-	"icons": [
-        {
-            "src": "/android-chrome-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/android-chrome-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+	"icons": {
+		"16": "logo.png",
+		"48": "logo.png",
+		"128": "logo.png"
+	}
 }
