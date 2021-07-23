@@ -1,6 +1,6 @@
 import React from "react";
 
-const PasswordNew = () => {
+const PasswordNew = (props) => {
     return (
         <div>
             <h3 className="ui header">
@@ -9,7 +9,7 @@ const PasswordNew = () => {
             </h3>
             <div className="field">
                 <div className="ui icon input">
-                    <input type="text" name="newPassword" />
+                    <input type="text" name="newPassword" defaultValue={props.defaultValue} onChange={props.onChange} />
                     <i className="copy outline icon"></i>
                 </div>
             </div>
