@@ -116,7 +116,7 @@ const LoginAccountEdit = () => {
         </UISegmentWithHeader>
 
         <UISegmentWithHeader header="One Time Password">
-            <UITextField type="text" name="oneTimePassword" defaultValue={otp} />
+            <UITextField type="text" name="oneTimePassword" defaultValue={otp} onChange={e => setOtp(e.target.value)} />
         </UISegmentWithHeader>
         
         <UISegmentWithHeader header="URL">
