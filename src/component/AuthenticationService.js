@@ -49,7 +49,7 @@ let getAuthItem = () => {
 let getAuthSalt = () => {
     let data = getAuthObj();
     return data["data"].split(state.separator)[1];
-}
+};
 
 let verifySHA256 = (message, hash) => {
     return SHA256(message).toString() === hash;
@@ -57,7 +57,7 @@ let verifySHA256 = (message, hash) => {
 
 let verifyHmac = (message, key, hash) => {
     return HmacSHA256(message, key).toString() === hash;
-}
+};
 
 let validateSessionKey = (data, key) => {
     data = data.split(state.separator);
@@ -71,10 +71,17 @@ let validateSessionKey = (data, key) => {
 
     if (!verifyHmac(data[0] + state.separator + data[1], key, data[2]))
         return false;
-
-    localStorage.setItem("sessionKey", key);
     return true;
-}
+};
+
+let storeNewSessionKey = (data, key) => {
+    data = data.split(state.separator);
+    if (data.length !== 3)
+        return false;
+
+    key = PBKDF2(key, data[1], state.pbkdf2.options).toString();
+    localStorage.setItem("sessionKey", key);
+};
 
 let getPBKDF2 = (key) => {
     let salt = CryptoJS.lib.WordArray.random(128 / 8).toString();
@@ -82,7 +89,7 @@ let getPBKDF2 = (key) => {
         key: PBKDF2(key, salt, state.pbkdf2.options).toString(),
         salt: salt
     };
-}
+};
 
 let encryptAndStore = (authObj, key, salt) => {
     authObj["data"] = encryptAES(JSON.stringify(authObj["data"]), key, salt);
@@ -187,11 +194,31 @@ const AuthenticationService = {
 
         return OKStatus(data);
     },
+    passwordVerify: function(key) {
+        let data = getAuthObj();
+
+        if (!validateSessionKey(data["data"], key))
+            return null;
+        return OKStatus();
+    },
+    passwordChange: function(oldKey, newKey) {
+        let authObj = getAuthObj();
+        if (!(this.sessionValid() && validateSessionKey(authObj["data"], oldKey)))
+            return null;
+        
+        let authItem = getAuthItem();
+        let pbkdf = getPBKDF2(newKey);
+        authObj["data"] = authItem;
+        encryptAndStore(authObj, pbkdf.key, pbkdf.salt);
+        localStorage.setItem("sessionKey", pbkdf.key);
+        return OKStatus();
+    },
     sessionStart: function(key) {
         let data = getAuthObj();
         
         if (!validateSessionKey(data["data"], key))
             return null;
+        storeNewSessionKey(data["data"], key);
         return OKStatus();
     },
     sessionValid: function() {
