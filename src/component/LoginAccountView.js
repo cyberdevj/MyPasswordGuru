@@ -47,16 +47,16 @@ const LoginAccountView = () => {
             </UISegmentWithProfilePicture>
 
             <UISegmentWithHeader header="Credentials">
-                <UITextField label="Username" type="text" name="username" defaultValue={login["username"]} isReadOnly={true} />
-                <UITextField label="Password" type="password" name="username" defaultValue={login["password"]} iconCss="copy outline icon" isReadOnly={true} />
+                <UITextField label="Username" type="text" name="username" value={login["username"] ? login["username"] : ""} isReadOnly={true} />
+                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} iconCss="copy outline icon" isReadOnly={true} />
             </UISegmentWithHeader>
 
             <UISegmentWithHeader header="One Time Password">
-                <UITextField type="text" name="oneTimePassword" defaultValue={login["otp"]} isReadOnly={true} />
+                <UITextField type="text" name="oneTimePassword" value={login["otp"] ? login["otp"] : ""} isReadOnly={true} />
             </UISegmentWithHeader>
             
             <UISegmentWithHeader header="URI">
-                <UITextField type="text" name="uri1" defaultValue={login["url"]} iconCss="external alternate icon" isReadOnly={true} />
+                <UITextField type="text" name="uri1" value={login["url"] ? login["url"] : ""} iconCss="external alternate icon" isReadOnly={true} />
             </UISegmentWithHeader>
 
             <Link className="ui icon button positive" to={`/login/edit/${login["id"]}`}><i className="edit outline icon"></i></Link>

@@ -7,11 +7,11 @@ import AuthenticationService from "./AuthenticationService";
 
 const LoginAccountEdit = () => {
     const [title, setTitle] = useState("Add New Login");
-    const [name, setName] = useState(null);
-    const [username, setUsername] = useState(null);
-    const [password, setPassword] = useState(null);
-    const [otp, setOtp] = useState(null);
-    const [url, setUrl] = useState(null);
+    const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [otp, setOtp] = useState("");
+    const [url, setUrl] = useState("");
     const [prevlink, setPrevlink] = useState("/login/list");
 
     const history = useHistory();
@@ -91,13 +91,13 @@ const LoginAccountEdit = () => {
         }
 
         let data = AuthenticationService.getItemFromList(params["id"], logins["data"]);
-        setTitle("Edit Login");
-        setName(data["name"]);
-        setUsername(data["username"]);
-        setPassword(data["password"]);
-        setOtp(data["otp"]);
-        setUrl(data["url"]);
+        setName(data["name"] ? data["name"] : "");
+        setUsername(data["username"] ? data["username"] : "");
+        setPassword(data["password"] ? data["password"] : "");
+        setOtp(data["otp"] ? data["otp"] : "");
+        setUrl(data["url"] ? data["url"] : "");
         setPrevlink("/login/view");
+        setTitle("Edit Login");
     }, [history, params, isEdit]);
 
     return (
@@ -107,20 +107,20 @@ const LoginAccountEdit = () => {
         </h1>
         
         <UISegment>
-            <UITextField label="Name" type="text" name="name" defaultValue={name} onChange={e => setName(e.target.value)} />
+            <UITextField label="Name" type="text" name="name" value={name} onChange={e => setName(e.target.value)} />
         </UISegment>
 
         <UISegmentWithHeader header="Credentials">
-            <UITextField label="Username" type="text" name="username" defaultValue={username} onChange={e => setUsername(e.target.value)} />
-            <UITextField label="Password" type="password" name="password" iconCss="copy outline icon" defaultValue={password} onChange={e => setPassword(e.target.value)} />
+            <UITextField label="Username" type="text" name="username" value={username} onChange={e => setUsername(e.target.value)} />
+            <UITextField label="Password" type="password" name="password" iconCss="copy outline icon" value={password} onChange={e => setPassword(e.target.value)} />
         </UISegmentWithHeader>
 
         <UISegmentWithHeader header="One Time Password">
-            <UITextField type="text" name="oneTimePassword" defaultValue={otp} onChange={e => setOtp(e.target.value)} />
+            <UITextField type="text" name="oneTimePassword" value={otp} onChange={e => setOtp(e.target.value)} />
         </UISegmentWithHeader>
         
         <UISegmentWithHeader header="URL">
-            <UITextField type="text" name="uri" iconCss="external alternate icon" defaultValue={url} onChange={e => setUrl(e.target.value)} />
+            <UITextField type="text" name="uri" iconCss="external alternate icon" value={url} onChange={e => setUrl(e.target.value)} />
         </UISegmentWithHeader>
 
         <div className="ui right floated">
