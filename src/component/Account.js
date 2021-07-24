@@ -4,8 +4,7 @@ import DatePicker from "react-datepicker";
 import AuthenticationService from "./AuthenticationService";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
-import ListItem from "./ListItem";
-import "react-datepicker/dist/react-datepicker.css";
+import UICardItem from "./UICardItem";
 import UICountryField from "./UICountryField";
 
 const Account = () => {
@@ -21,6 +20,8 @@ const Account = () => {
     const [confirmPin, setConfirmPin] = useState("");
     const [pinStatus, setPinStatus] = useState(null);
     const [pinError, setPinError] = useState(false);
+
+    const [interests, setInterests] = useState([]);
 
     const history = useHistory();
 
@@ -74,6 +75,18 @@ const Account = () => {
         pinTimeoutStatus();
     };
 
+    const renderInterest = () => {
+        if (interests.length === 0) {
+            return <div className="ui message yellow">No interest selected yet</div>;
+        } else {
+            return (
+                <div className="ui cards">
+                    {interests.map(i => <UICardItem title={i.name} meta={i.type} />)}
+                </div>
+            )
+        }
+    };
+
     const pinTimeoutStatus = () => {
             setTimeout(() => {
             setCurrentPin("");
@@ -84,7 +97,7 @@ const Account = () => {
         }, 1000)
     };
 
-    const setProfile = useCallback((data) => {
+    const setProfile = useCallback(data => {
         setFullname(data["fullname"] ? data["fullname"] : "");
         setCountry(data["country"] ? data["country"] : "");
         setLanguage(data["language"] ? data["language"] : "");
@@ -101,6 +114,7 @@ const Account = () => {
 
         let data = profileResult["data"];
         setProfile(data);
+        setInterests(data["interests"] ? data["interests"] : []);
     }, [history, setProfile]);
 
     return (
@@ -136,19 +150,7 @@ const Account = () => {
             </UISegmentWithHeader>
 
             <UISegmentWithHeader header="Interest">
-                <div className="ui celled list">
-                    <ListItem title="Linux" content="Computer" />
-                    <ListItem title="Apple" content="Computer" />
-                    <ListItem title="Dog" content="Animal" />
-                    <ListItem title="Cat" content="Animal" />
-                    <ListItem title="Hamster" content="Animal" />
-                    <ListItem title="Ferrari" content="Car" />
-                    <ListItem title="Posche" content="Car" />
-                    <ListItem title="Posche" content="Car" />
-                    <ListItem title="Giordano" content="Fashion" />
-                    <ListItem title="Adidas" content="Fashion" />
-                    <ListItem title="Nike" content="Fashion" />
-                </div>
+                {renderInterest()}
             </UISegmentWithHeader>
 
             <Link className="fluid ui button" to="/account/personalize">Personalize</Link>
