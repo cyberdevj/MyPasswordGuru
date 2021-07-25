@@ -80,8 +80,8 @@ const Account = () => {
             return <div className="ui message yellow">No interest selected yet</div>;
         } else {
             return (
-                <div className="ui cards">
-                    {interests.map(i => <UICardItem title={i.name} meta={i.type} />)}
+                <div className="ui cards h-400 overflow">
+                    {interests.map((interest, index) => <UICardItem key={index} title={interest.name} meta={interest.type} />)}
                 </div>
             )
         }
@@ -97,25 +97,34 @@ const Account = () => {
         }, 1000)
     };
 
-    const setProfile = useCallback(data => {
+    const loadProfileData = useCallback(() => {
+        let data = AuthenticationService.get("profile");
+        if (data["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+        data = data["data"];
         setFullname(data["fullname"] ? data["fullname"] : "");
         setCountry(data["country"] ? data["country"] : "");
         setLanguage(data["language"] ? data["language"] : "");
         setBirthdate(data["birthdate"] ? new Date(data["birthdate"]) : new Date());
         setCompany(data["company"] ? data["company"] : "");
-    }, []);
+    }, [history]);
 
-    useEffect(() => {
-        let profileResult = AuthenticationService.get("profile");
-        if (profileResult["status"] !== "OK") {
+    const loadInterestsList = useCallback(() => {
+        let data = AuthenticationService.get("interests");
+        if (data["status"] !== "OK") {
             AuthenticationService.sessionDestroy();
             history.push("/");
         }
+        data = data["data"];
+        setInterests(data);
+    }, [history]);
 
-        let data = profileResult["data"];
-        setProfile(data);
-        setInterests(data["interests"] ? data["interests"] : []);
-    }, [history, setProfile]);
+    useEffect(() => {
+        loadProfileData();
+        loadInterestsList();
+    }, [history, loadProfileData, loadInterestsList]);
 
     return (
         <form className="ui form">
@@ -149,8 +158,10 @@ const Account = () => {
                 {pinStatus ? <small style={ !pinError ? {"color": "green"} : {"color": "red"}}>{pinStatus}</small> : null}
             </UISegmentWithHeader>
 
-            <UISegmentWithHeader header="Interest">
+            <UISegmentWithHeader header="Interest" >
                 {renderInterest()}
+                <br />
+                <Link className="ui button blue fluid" to="/account/interest">Manage</Link>
             </UISegmentWithHeader>
 
             <Link className="fluid ui button" to="/account/personalize">Personalize</Link>
