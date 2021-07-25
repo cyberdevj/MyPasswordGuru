@@ -118,7 +118,7 @@ const Account = () => {
             history.push("/");
         }
         data = data["data"];
-        setInterests(data);
+        setInterests(data ? data : []);
     }, [history]);
 
     useEffect(() => {
