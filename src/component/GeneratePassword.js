@@ -40,10 +40,10 @@ const GeneratePassword = () => {
                 </h3>
                 <UIRange label="Length" type="number" max={128} value={optLength} onChange={e => setOptLength(e.target.value)} />
                 <div className="ui four column grid">
-                    <UICheckBox className="column" id="ucid" label="A-Z" onClick={e => handleCbChange(e, "UC")} checked={optUppercase} />
-                    <UICheckBox className="column" id="lcid" label="a-z" onClick={e => handleCbChange(e, "LC")} checked={optLowercase} />
-                    <UICheckBox className="column" id="numid" label="0-9" onClick={e => handleCbChange(e, "NUM")} checked={optNumbers} />
-                    <UICheckBox className="column" id="scid" label="!@#$%^&amp;*" onClick={e => handleCbChange(e, "SC")} checked={optSpecial} />
+                    <UICheckBox className="column" id="ucid" label="A-Z" onClick={e => handleCbChange(e, "UC")} checked={optUppercase} readOnly />
+                    <UICheckBox className="column" id="lcid" label="a-z" onClick={e => handleCbChange(e, "LC")} checked={optLowercase} readOnly />
+                    <UICheckBox className="column" id="numid" label="0-9" onClick={e => handleCbChange(e, "NUM")} checked={optNumbers} readOnly />
+                    <UICheckBox className="column" id="scid" label="!@#$%^&amp;*" onClick={e => handleCbChange(e, "SC")} checked={optSpecial} readOnly />
                 </div>
             </form>
         </div>
