@@ -29,7 +29,7 @@ const Nav = (props) => {
         <div className="ui container">
             <div className="ui four item menu">
                 <Link className={account} to="/login/list" onClick={e => setAccount("item active")}>Your Logins</Link>
-                <Link className={generate} to="/generate/basic">Generate</Link>
+                <Link className={generate} to="/generate/password">Generate</Link>
                 <Link className={settings} to="/account">Account</Link>
                 <button className="ui link button item" onClick={lockAccount}>Lock</button>
             </div>

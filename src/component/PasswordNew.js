@@ -8,8 +8,8 @@ const PasswordNew = (props) => {
                 <div className="sub header">Your newly generated password will appear here.</div>
             </h3>
             <div className="field">
-                <div className="ui icon input">
-                    <input type="text" name="newPassword" defaultValue={props.defaultValue} onChange={props.onChange} />
+                <div className="ui input icon">
+                    <input type="text" name="newPassword" value={props.value} defaultValue={props.defaultValue} onChange={props.onChange} />
                     <i className="copy outline icon"></i>
                 </div>
             </div>

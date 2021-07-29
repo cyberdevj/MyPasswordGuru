@@ -10,14 +10,11 @@ import {
 } from "react-router-dom";
 import ReactDOM from 'react-dom';
 import Nav from './component/Nav';
-import GenerateNav from './component/GenerateNav';
 import Main from './component/Main';
 import LoginAccountEdit from './component/LoginAccountEdit';
 import LoginAccountView from './component/LoginAccountView';
 import LoginAccountList from './component/LoginAccountList';
-import GenerateBasic from './component/GenerateBasic';
-import GenerateEnhanced from './component/GenerateEnhanced';
-import GenerateCustom from './component/GenerateCustom';
+import GeneratePassword from './component/GeneratePassword';
 import Account from './component/Account';
 import AccountInterest from './component/AccountInterest';
 import AccountNew from './component/AccountNew';
@@ -48,25 +45,9 @@ const App = () => {
                         <LoginAccountList />
                     </Nav>
                 </Route>
-                <Route path="/generate/basic">
+                <Route path="/generate/password">
                     <Nav>
-                        <GenerateNav>
-                            <GenerateBasic />
-                        </GenerateNav>
-                    </Nav>
-                </Route>
-                <Route path="/generate/enhanced">
-                    <Nav>
-                        <GenerateNav>
-                            <GenerateEnhanced />
-                        </GenerateNav>
-                    </Nav>
-                </Route>
-                <Route path="/generate/custom">
-                    <Nav>
-                        <GenerateNav>
-                            <GenerateCustom />
-                        </GenerateNav>
+                        <GeneratePassword />
                     </Nav>
                 </Route>
                 <Route path="/account/personalize">
