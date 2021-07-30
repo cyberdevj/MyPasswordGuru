@@ -6,7 +6,7 @@ const UIRange = (props) => {
             <div className="four wide column">
                 <div className="ui labeled input">
                     <div className="ui label">{props.label}</div>
-                    <input id={props.id} type="number" max={props.max} value={props.value} onChange={props.onChange} />
+                    <input id={props.id} type="text" max={props.max} value={props.value} onChange={props.onChange} />
                 </div>
             </div>
             <div className="twelve wide column">
