@@ -18,6 +18,14 @@ body {
     color: #808080;
 }
 
+.color-blue {
+    color: #0000FF;
+}
+
+.color-red {
+    color: #FF0000;
+}
+
 .text-bold {
     font-weight: bold;
 }
@@ -34,6 +42,14 @@ div [class*="left floated"] {
 div [class*="right floated"] {
     float: right;
     margin-right: 0.25em;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
 }
 
 .h-400 {
