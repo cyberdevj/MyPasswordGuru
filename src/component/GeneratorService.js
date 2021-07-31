@@ -70,7 +70,7 @@ const setInterestTraining = () => {
 };
 
 const GeneratorService = {
-    generatePassword: function(passwordLength, allowUppercase, allowLowercase, allowNumbers, allowSpecial, minNumbers, minSpecial) {
+    generatePassword: function(options) {
         let data = AuthenticationService.get("training");
         if (data["status"] !== "OK")
             return data;
@@ -84,12 +84,12 @@ const GeneratorService = {
             // console.log(training);
         }
 
-        MINIMUM_UPPERCASE = allowUppercase ? 1 : 0;
-        MINIMUM_LOWERCASE = allowLowercase ? 1 : 0;
-        MINIMUM_NUMBERS = minNumbers;
-        MINIMUM_SPECIAL = minSpecial;
+        MINIMUM_UPPERCASE = options.uppercase ? 1 : 0;
+        MINIMUM_LOWERCASE = options.uppercase ? 1 : 0;
+        MINIMUM_NUMBERS = options.default.numbers;
+        MINIMUM_SPECIAL = options.default.special;
 
-        let allCharacters = getAllCharacters(allowUppercase, allowLowercase, allowNumbers, allowSpecial);
+        let allCharacters = getAllCharacters(options.uppercase, options.lowercase, options.numbers, options.special);
         let password = {
             new: [],
             uppercase: [],
@@ -97,7 +97,7 @@ const GeneratorService = {
             numbers: [],
             special: []
         };
-        for (let i = 0; i < passwordLength; i++) {
+        for (let i = 0; i < options.length; i++) {
             let c = allCharacters[Math.floor(Math.random() * allCharacters.length)];
             password.new.push(c);
             if (/^[A-Z]$/.test(c)) password.uppercase.push(i);
@@ -106,10 +106,10 @@ const GeneratorService = {
             if (/^[!@#$%^&*]$/.test(c)) password.special.push(i);
         }
 
-        replaceCharacter(password, "uppercase", MINIMUM_UPPERCASE, specialCharacters);
-        replaceCharacter(password, "lowercase", MINIMUM_LOWERCASE, specialCharacters);
-        replaceCharacter(password, "numbers", MINIMUM_NUMBERS, numberCharacters);
-        replaceCharacter(password, "special", MINIMUM_SPECIAL, specialCharacters);
+        if (options.uppercase) replaceCharacter(password, "uppercase", MINIMUM_UPPERCASE, specialCharacters);
+        if (options.lowercase) replaceCharacter(password, "lowercase", MINIMUM_LOWERCASE, specialCharacters);
+        if (options.numbers) replaceCharacter(password, "numbers",   MINIMUM_NUMBERS, numberCharacters);
+        if (options.special) replaceCharacter(password, "special",   MINIMUM_SPECIAL, specialCharacters);
 
         return password.new;
     }
