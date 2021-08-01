@@ -70,7 +70,7 @@ const AccountInterest = () => {
             history.push("/");
         }
 
-        setSelectedList(data["data"]);
+        setSelectedList(data["data"] ? data["data"] : []);
     }, [history]);
 
     useEffect(() => {
