@@ -1,7 +1,9 @@
 import AuthenticationService from "./AuthenticationService";
 
-// TODO Generate based on interest first
-// TODO Generate based on profile after
+// TODO Randomly select interest based on weightage score
+// TODO Recalculating interest weightage score based password generation
+// TODO Import and Export of user data
+// TODO Copy function
 
 const uppercaseCharacters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const lowercaseCharacters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -25,6 +27,7 @@ const specialCharacterMapping = {
     'a': ['@'],
     'H': ['#'],
     'I': ['!'],
+    'i': ['!'],
     'l': ['!']
 };
 
@@ -62,7 +65,7 @@ const replaceCharacter = (password, key, min, array) => {
     }
 };
 
-const getCharacterMapping = (interest, options) => {
+const transformCharacterLeet = (interest, options) => {
     let array = interest.split('');
     for (let i = 0; i < array.length; i++) {
         let randomMapping = Math.floor(Math.random() * 2);
@@ -83,23 +86,27 @@ const getCharacterMapping = (interest, options) => {
     return array.join('');
 };
 
+const transformCharacterCasing = (interest, options) => {
+    if (options.uppercase && options.lowercase)
+        return interest["name"].split('').map(v => Math.round(Math.random()) ? v.toUpperCase() : v.toLowerCase()).join('');
+    else if (options.uppercase)
+        return interest["name"].toUpperCase(); 
+    else if (options.lowercase)
+        return interest["name"].toLowerCase();
+};
+
 const getRandomInterest = (training, options) => {
-    let totalInterest = 1;
     let interests = [];
     if (training.interests.length === 0)
         return interests;
-
-    for (let i = 0; i < totalInterest; i++) {
+    
+    while (interests.join('').length < options.length) {
         interests.push(training.interests[Math.floor(Math.random() * training.interests.length)]);
-        if (options.uppercase && options.lowercase)
-            interests[i] = interests[i]["name"].split('').map(v => Math.round(Math.random()) ? v.toUpperCase() : v.toLowerCase()).join('');
-        else if (options.uppercase)
-            interests[i] = interests[i]["name"].toUpperCase(); 
-        else if (options.lowercase)
-            interests[i] = interests[i]["name"].toLowerCase();
-            
-        interests[i] = getCharacterMapping(interests[i], options);
+        let i = interests.length - 1;
+        interests[i] = transformCharacterCasing(interests[i], options)
+        interests[i] = transformCharacterLeet(interests[i], options);
     }
+    interests.splice(-1);
 
     return interests;
 };
@@ -113,7 +120,8 @@ const getCharacterSet = (allowUppercase, allowLowercase, allowNumber, allowSpeci
     return allCharacters;
 };
 
-const buildPassword = (characterSet, options, randomInterest) => {
+const buildPassword = (options, randomInterest) => {
+    let characterSet = getCharacterSet(options.uppercase, options.lowercase, options.numbers, options.special);
     let password = {
         new: [],
         uppercase: [],
@@ -122,6 +130,7 @@ const buildPassword = (characterSet, options, randomInterest) => {
         special: []
     };
 
+    // Adds interest to password
     let passwordLength = options.length;
     if (randomInterest.length > 0) {
         randomInterest.forEach(v => {
@@ -178,10 +187,9 @@ const GeneratorService = {
         MINIMUM_NUMBERS = options.default.numbers;
         MINIMUM_SPECIAL = options.default.special;
 
-        let randomInterest = getRandomInterest(training, options);
-        let characterSet = getCharacterSet(options.uppercase, options.lowercase, options.numbers, options.special);
-        let password = buildPassword(characterSet, options, randomInterest);
 
+        let randomInterest = getRandomInterest(training, options);
+        let password = buildPassword(options, randomInterest);
 
         return password.new;
     }
