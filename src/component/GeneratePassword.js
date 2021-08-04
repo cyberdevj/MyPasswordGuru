@@ -77,16 +77,17 @@ const GeneratePassword = () => {
         setInterests(data.map(v => ({...v, checked: !disableInterest})));
     }, [history, disableInterest]);
 
-    const generateNewPassword = () => {
+    const generateNewPassword = useCallback(() => {
         let filterInterests = interests.filter(v => v.checked).map(({checked, ...remainingAttr}) => remainingAttr);
         let newPassword = GeneratorService.generatePassword(options, filterInterests);
         setPassword(newPassword);
-    };
+    }, [options]);
 
     useEffect(() => {
         setDisableInterest((!options.uppercase && !options.lowercase));
         loadInterests();
-    }, [loadInterests, options]);
+        generateNewPassword();
+    }, [loadInterests, options, generateNewPassword]);
 
     return (
         <div className="ui container">
