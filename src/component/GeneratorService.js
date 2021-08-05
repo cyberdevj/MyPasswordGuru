@@ -107,7 +107,8 @@ const getRandomInterest = (interests, options) => {
         randomInterest[i] = transformCharacterCasing(randomInterest[i], options)
         randomInterest[i] = transformCharacterLeet(randomInterest[i], options);
     }
-    return randomInterest.splice(-1);
+    randomInterest.pop();
+    return randomInterest;
 };
 
 const getCharacterSet = (allowUppercase, allowLowercase, allowNumber, allowSpecial) => {
