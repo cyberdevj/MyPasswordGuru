@@ -1,7 +1,7 @@
 {
 	"name": "Guru - Smart Password Manager",
 	"description": "A password locker that generates your password based on your personalization and interest.",
-	"version": "1.8.1",
+	"version": "1.8.2",
 	"manifest_version": 3,
 	"permissions": [],
 	"action": {

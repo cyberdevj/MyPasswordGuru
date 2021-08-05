@@ -78,7 +78,12 @@ const GeneratePassword = () => {
         }
         setDisableInterest(disableInterest);
         setInterests(interests.map(v => ({...v, checked: !disableInterest})));
-    }
+    };
+    
+    const setInterestCheckbox = () => {
+        setInterests(interests.map(v => ({...v, checked: disableInterest})));
+        setDisableInterest((options.uppercase || options.lowercase) ? !disableInterest : true);
+    };
 
     const loadInterests = useCallback(() => {
         let data = AuthenticationService.get("interests");
@@ -132,8 +137,11 @@ const GeneratePassword = () => {
                 </div>
                 <h3 className="ui header">
                     <div className="content">Interests</div>
-                    <div className="sub header">You may select which interest you wish to include for your passwords</div>
+                    <div className="sub header">You may select which interest you wish to include for your passwords</div>                    
                 </h3>
+                <div className="ui one column grid">
+                    <UICheckBox className="column" label="Interests" onClick={() => setInterestCheckbox()} disabled={!(options.uppercase || options.lowercase)} checked={!disableInterest} readOnly />
+                </div>
                 <div className="ui three column grid">
                     {interests.map((interest, index) => (
                         <UICheckBox className="column" key={index} label={interest["name"]} sub={interest["type"]} value={interest["name"]} checked={interest["checked"]} onClick={() => checkboxOnClick(index)} readOnly disabled={disableInterest} />
