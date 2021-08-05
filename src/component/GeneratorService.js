@@ -95,20 +95,19 @@ const transformCharacterCasing = (interest, options) => {
         return interest["name"].toLowerCase();
 };
 
-const getRandomInterest = (training, options) => {
-    let interests = [];
-    if (training.interests.length === 0)
+const getRandomInterest = (interests, options) => {
+    if (interests.length === 0)
         return interests;
     
-    while (interests.join('').length < options.length) {
-        interests.push(training.interests[Math.floor(Math.random() * training.interests.length)]);
-        let i = interests.length - 1;
-        interests[i] = transformCharacterCasing(interests[i], options)
-        interests[i] = transformCharacterLeet(interests[i], options);
+    let randomInterest = [];
+    while (randomInterest.join('').length < options.length) {
+        randomInterest.push(interests[Math.floor(Math.random() * interests.length)]);
+        let i = randomInterest.length - 1;
+        
+        randomInterest[i] = transformCharacterCasing(randomInterest[i], options)
+        randomInterest[i] = transformCharacterLeet(randomInterest[i], options);
     }
-    interests.splice(-1);
-
-    return interests;
+    return randomInterest.splice(-1);
 };
 
 const getCharacterSet = (allowUppercase, allowLowercase, allowNumber, allowSpecial) => {
@@ -166,29 +165,34 @@ const doCharacterReplacement = (password, options) => {
     if (options.special)   replaceCharacter(password, "special",   MINIMUM_SPECIAL,   specialCharacters);
 };
 
+const getInterestWeight = (data, interests) => {
+    if (interests.length === 0) {
+        return interests;
+    }
+
+    let training = data ? data : {};
+    
+    interests.forEach((v, i) => {
+        interests[i].weight = training[v] ? training[v].weight : 100;
+    });
+    return interests;
+}
+
 const GeneratorService = {
     generatePassword: function(options, interests) {
 
         let data = AuthenticationService.get("training");
         if (data["status"] !== "OK")
-        return data;
+            return data;
         
-        let training = data["data"] ? data["data"] : {};
-        if (Object.keys(training).length === 0) {
-            training = {
-                profile: {},
-                interests: interests
-            };
-            training.interests = training.interests.map(v => ({...v, weight: 100}));
-        }
-        
+        interests = getInterestWeight(data["data"], interests);
+
         MINIMUM_UPPERCASE = options.uppercase ? 1 : 0;
         MINIMUM_LOWERCASE = options.uppercase ? 1 : 0;
         MINIMUM_NUMBERS = options.default.numbers;
         MINIMUM_SPECIAL = options.default.special;
 
-
-        let randomInterest = getRandomInterest(training, options);
+        let randomInterest = getRandomInterest(interests, options);
         let password = buildPassword(options, randomInterest);
 
         return password.new;
