@@ -7,6 +7,7 @@ import AuthenticationService from "./AuthenticationService";
 
 const LoginAccountView = () => {
     const [login, setLogin] = useState({});
+    const [copyLabel, setCopyLabel] = useState(false);
 
     const history = useHistory();
     const params = useParams();
@@ -21,6 +22,16 @@ const LoginAccountView = () => {
         AuthenticationService.set("logins", logins);
         history.push("/login/list");
     };
+
+    const copyToClipboard = () => {
+        if (copyLabel) return;
+        navigator.clipboard.writeText(login["password"]);
+
+        setCopyLabel(true);
+        setTimeout(() => {
+            setCopyLabel(false);
+        }, 2000);
+    }
 
     useEffect(() => {
         let logins = AuthenticationService.get("logins");
@@ -48,7 +59,7 @@ const LoginAccountView = () => {
 
             <UISegmentWithHeader header="Credentials">
                 <UITextField label="Username" type="text" name="username" value={login["username"] ? login["username"] : ""} isReadOnly={true} />
-                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} iconCss="copy outline icon" isReadOnly={true} />
+                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} iconCss="copy outline link icon" iconOnClick={() => copyToClipboard()} iconLabel="Copied!" showIconLabel={copyLabel} isReadOnly={true} />
             </UISegmentWithHeader>
 
             <UISegmentWithHeader header="One Time Password">
@@ -56,7 +67,7 @@ const LoginAccountView = () => {
             </UISegmentWithHeader>
             
             <UISegmentWithHeader header="URI">
-                <UITextField type="text" name="uri1" value={login["url"] ? login["url"] : ""} iconCss="external alternate icon" isReadOnly={true} />
+                <UITextField type="text" name="uri1" value={login["url"] ? login["url"] : ""} iconCss="external alternate link icon" iconOnClick={() => window.open(AuthenticationService.getHttps(login["url"]), "_blank")} isReadOnly={true} />
             </UISegmentWithHeader>
 
             <Link className="ui icon button positive" to={`/login/edit/${login["id"]}`}><i className="edit outline icon"></i></Link>

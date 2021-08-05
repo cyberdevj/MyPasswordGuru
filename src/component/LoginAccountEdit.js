@@ -14,6 +14,8 @@ const LoginAccountEdit = () => {
     const [url, setUrl] = useState("");
     const [prevlink, setPrevlink] = useState("/login/list");
 
+    const [copyLabel, setCopyLabel] = useState(false);
+
     const history = useHistory();
     const location = useLocation().pathname;
     const params = useParams();
@@ -80,6 +82,16 @@ const LoginAccountEdit = () => {
             addLogin();
     };
 
+    const copyToClipboard = () => {
+        if (copyLabel) return;
+        navigator.clipboard.writeText(password);
+
+        setCopyLabel(true);
+        setTimeout(() => {
+            setCopyLabel(false);
+        }, 2000);
+    }
+
     useEffect(() => {
         if (!isEdit())
             return;
@@ -112,7 +124,7 @@ const LoginAccountEdit = () => {
 
         <UISegmentWithHeader header="Credentials">
             <UITextField label="Username" type="text" name="username" value={username} onChange={e => setUsername(e.target.value)} />
-            <UITextField label="Password" type="password" name="password" iconCss="copy outline icon" value={password} onChange={e => setPassword(e.target.value)} />
+            <UITextField label="Password" type="password" name="password" iconCss="copy outline link icon" iconOnClick={() => copyToClipboard()} iconLabel="Copied!" showIconLabel={copyLabel} value={password} onChange={e => setPassword(e.target.value)} />
         </UISegmentWithHeader>
 
         <UISegmentWithHeader header="One Time Password">
@@ -120,7 +132,7 @@ const LoginAccountEdit = () => {
         </UISegmentWithHeader>
         
         <UISegmentWithHeader header="URL">
-            <UITextField type="text" name="uri" iconCss="external alternate icon" value={url} onChange={e => setUrl(e.target.value)} />
+            <UITextField type="text" name="uri" iconCss="external alternate link icon" value={url} onChange={e => setUrl(e.target.value)} iconOnClick={() => window.open(AuthenticationService.getHttps(url), "_blank")} />
         </UISegmentWithHeader>
 
         <div className="ui right floated">

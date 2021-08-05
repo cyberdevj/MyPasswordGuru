@@ -8,7 +8,7 @@ import UIRange from "./UIRange";
 import UITextField from "./UITextField";
 
 const GeneratePassword = () => {
-    const [password, setPassword] = useState("");
+    const [password, setPassword] = useState({});
     const [options, setOptions] = useState({
         length: 14,
         uppercase: true,
@@ -22,6 +22,7 @@ const GeneratePassword = () => {
     });
     const [interests, setInterests] = useState([]);
     const [disableInterest, setDisableInterest] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
 
     const history = useHistory();
 
@@ -85,6 +86,16 @@ const GeneratePassword = () => {
         setDisableInterest((options.uppercase || options.lowercase) ? !disableInterest : true);
     };
 
+    const copyToClipboard = () => {
+        if (isCopied) return;
+
+        navigator.clipboard.writeText(password.new.join(""));
+        setIsCopied(true);
+        setTimeout(() => {
+            setIsCopied(false);
+        }, 2000);
+    };
+
     const loadInterests = useCallback(() => {
         let data = AuthenticationService.get("interests");
         if (data["status"] !== "OK") {
@@ -117,7 +128,7 @@ const GeneratePassword = () => {
             </div>
             <br />
             <form className="ui form" spellCheck="false">
-                <PasswordNew value={password} onChange={e => setPassword(e.target.value)} />
+                <PasswordNew value={password} onChange={e => setPassword(e.target.value)} copyOnClick={() => copyToClipboard()} isCopied={isCopied} />
                 <br />
                 <button className="ui fluid button blue" type="button" onClick={generateNewPassword}>Generate</button>
                 <h3 className="ui header">

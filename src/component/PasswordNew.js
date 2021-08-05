@@ -2,6 +2,9 @@ import React from "react";
 
 const PasswordNew = (props) => {
     const renderPassword = (password) => {
+        if (!password.new) return "";
+        password = password.new;
+
         let passwordElementArray = [];
         for (let i = 0; i < password.length; i++) {
             if (/^[0-9]$/.test(password[i])) {
@@ -21,15 +24,16 @@ const PasswordNew = (props) => {
         <div>
             <h3 className="ui header">
                 <div className="content">New Password</div>
-                <div className="sub header">Your newly generated password will appear here.</div>
+                <div className="sub header">Your newly generated password will appear here.<br />Clicking the copy icon will register your password preference.</div>
             </h3>
             <div className="field">
                 <div className="ui grid">
-                    <div className="twelve wide column">
+                    <div className="fifteen wide column">
                         {renderPassword(props.value)}
                     </div>
-                    <div className="four wide column">
-                        <i className="copy outline icon"></i>
+                    <div className="one wide column">
+                        <i className="copy outline link icon" onClick={props.copyOnClick}></i>
+                        {props.isCopied ? <div className="floating ui label">Copied!</div> : null}
                     </div>
                 </div>
             </div>
