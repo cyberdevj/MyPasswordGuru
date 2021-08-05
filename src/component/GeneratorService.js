@@ -1,9 +1,7 @@
 import AuthenticationService from "./AuthenticationService";
 
-// TODO Randomly select interest based on weightage score
 // TODO Recalculating interest weightage score based password generation
 // TODO Import and Export of user data
-// TODO Copy function
 
 const uppercaseCharacters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const lowercaseCharacters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -78,8 +76,7 @@ const transformCharacterLeet = (interest, options) => {
         }
 
         if (characterMapping) {
-            let randomChoice = Math.floor(Math.random() * 2);
-            if (randomChoice === 1)
+            if (Math.random() > 0.5)
                 array[i] = characterMapping[array[i]][Math.floor(Math.random() * characterMapping[array[i]].length)];
         }
     }
@@ -88,26 +85,48 @@ const transformCharacterLeet = (interest, options) => {
 
 const transformCharacterCasing = (interest, options) => {
     if (options.uppercase && options.lowercase)
-        return interest["name"].split('').map(v => Math.round(Math.random()) ? v.toUpperCase() : v.toLowerCase()).join('');
+        return interest.split('').map(v => Math.round(Math.random()) ? v.toUpperCase() : v.toLowerCase()).join('');
     else if (options.uppercase)
-        return interest["name"].toUpperCase(); 
+        return interest.toUpperCase(); 
     else if (options.lowercase)
-        return interest["name"].toLowerCase();
+        return interest.toLowerCase();
+};
+
+const getWeightedRandom = (interests) => {
+    let weightedInterestTable = [];
+    interests.forEach(v => {
+        for (let i = 0; i < v.weight; i++) {
+            weightedInterestTable.push(v);
+        }
+    });
+    return weightedInterestTable[Math.floor(Math.random() * weightedInterestTable.length)]["name"];
 };
 
 const getRandomInterest = (interests, options) => {
     if (interests.length === 0)
         return interests;
-    
-    let randomInterest = [];
-    while (randomInterest.join('').length < options.length) {
-        randomInterest.push(interests[Math.floor(Math.random() * interests.length)]);
-        let i = randomInterest.length - 1;
-        
-        randomInterest[i] = transformCharacterCasing(randomInterest[i], options)
-        randomInterest[i] = transformCharacterLeet(randomInterest[i], options);
+    let randomInterest = {
+        encoded: [],
+        plain: []
     }
-    randomInterest.pop();
+
+    while (randomInterest.plain.join('').length < options.length) {
+        randomInterest.plain.push(getWeightedRandom(interests));
+    }
+    randomInterest.plain.pop();
+
+    randomInterest.plain.forEach(() => {
+        if (randomInterest.plain.length > 1 && Math.random() > 0.5)
+            randomInterest.plain.pop();
+    });
+
+    
+    randomInterest.plain.forEach((v, i) => {
+        randomInterest.encoded.push(v);
+        randomInterest.encoded[i] = transformCharacterCasing(randomInterest.encoded[i], options);
+        randomInterest.encoded[i] = transformCharacterLeet(randomInterest.encoded[i], options);
+    });
+    
     return randomInterest;
 };
 
@@ -132,8 +151,8 @@ const buildPassword = (options, randomInterest) => {
 
     // Adds interest to password
     let passwordLength = options.length;
-    if (randomInterest.length > 0) {
-        randomInterest.forEach(v => {
+    if (randomInterest.encoded && randomInterest.encoded.length > 0) {
+        randomInterest.encoded.forEach(v => {
             password.new.push(v);
             passwordLength -= v.length;
         });
@@ -166,7 +185,7 @@ const doCharacterReplacement = (password, options) => {
     if (options.special)   replaceCharacter(password, "special",   MINIMUM_SPECIAL,   specialCharacters);
 };
 
-const getInterestWeight = (data, interests) => {
+const initializeInterestWeight = (data, interests) => {
     if (interests.length === 0) {
         return interests;
     }
@@ -174,19 +193,18 @@ const getInterestWeight = (data, interests) => {
     let training = data ? data : {};
     
     interests.forEach((v, i) => {
-        interests[i].weight = training[v] ? training[v].weight : 100;
+        interests[i].weight = training[v] ? training[v].weight : 10;
     });
     return interests;
 }
 
 const GeneratorService = {
     generatePassword: function(options, interests) {
-
         let data = AuthenticationService.get("training");
         if (data["status"] !== "OK")
             return data;
         
-        interests = getInterestWeight(data["data"], interests);
+        interests = initializeInterestWeight(data["data"], interests);
 
         MINIMUM_UPPERCASE = options.uppercase ? 1 : 0;
         MINIMUM_LOWERCASE = options.uppercase ? 1 : 0;
@@ -196,7 +214,7 @@ const GeneratorService = {
         let randomInterest = getRandomInterest(interests, options);
         let password = buildPassword(options, randomInterest);
 
-        return password.new;
+        return password;
     }
 };
 
