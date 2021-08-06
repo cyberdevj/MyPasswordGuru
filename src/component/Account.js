@@ -87,6 +87,11 @@ const Account = () => {
         }
     };
 
+    const clearTrainingData = (e) => {
+        e.preventDefault();
+        AuthenticationService.delete("training");
+    };
+
     const pinTimeoutStatus = () => {
             setTimeout(() => {
             setCurrentPin("");
@@ -163,8 +168,8 @@ const Account = () => {
                 <br />
                 <Link className="ui button blue fluid" to="/account/interest">Manage</Link>
             </UISegmentWithHeader>
-
-            <Link className="fluid ui button" to="/account/personalize">Personalize</Link>
+            
+            <button className="ui button fluid" onClick={e => clearTrainingData(e)}>Clear Training Data</button>
         </form>
     );
 }

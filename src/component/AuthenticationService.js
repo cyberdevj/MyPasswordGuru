@@ -174,16 +174,14 @@ const AuthenticationService = {
         callback(OKStatus());
     },
     get: function(key) {
-        if (!this.sessionValid())
-            return ERRStatus("Invalid session");
+        if (!this.sessionValid()) return ERRStatus("Invalid session");
 
         let data = getAuthItem()
 
         return OKStatus(data[key]);
     },
     set: function(key, value) {
-        if (!this.sessionValid())
-            return ERRStatus("Invalid session");
+        if (!this.sessionValid()) return ERRStatus("Invalid session");
 
         let data = getAuthItem();
         data[key] = value;
@@ -193,6 +191,16 @@ const AuthenticationService = {
         encryptAndStore(authObj, localStorage.getItem("sessionKey"), getAuthSalt());
 
         return OKStatus(data);
+    },
+    delete: function(key) {
+        if (!this.sessionValid()) return ERRStatus("Invalid session");
+
+        let data = getAuthItem();
+        delete data[key];
+
+        let authObj = getAuthItem();
+        authObj["data"] = data;
+        encryptAndStore(authObj, localStorage.getItem("sessionKey"), getAuthSalt());
     },
     passwordVerify: function(key) {
         let data = getAuthObj();
