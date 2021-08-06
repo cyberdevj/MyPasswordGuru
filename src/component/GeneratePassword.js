@@ -23,6 +23,7 @@ const GeneratePassword = () => {
     const [interests, setInterests] = useState([]);
     const [disableInterest, setDisableInterest] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
+    const [copiedText, setCopiedText] = useState("");
 
     const history = useHistory();
 
@@ -87,13 +88,16 @@ const GeneratePassword = () => {
     };
 
     const copyToClipboard = () => {
-        if (isCopied) return;
-
         navigator.clipboard.writeText(password.new.join(""));
+        if (isCopied) return;
         setIsCopied(true);
         setTimeout(() => {
             setIsCopied(false);
         }, 2000);
+
+        if (copiedText === password.new.join("")) return;
+        setCopiedText(password.new.join(""));
+        GeneratorService.saveInterestWeight();
     };
 
     const loadInterests = useCallback(() => {
@@ -155,7 +159,7 @@ const GeneratePassword = () => {
                 </div>
                 <div className="ui three column grid">
                     {interests.map((interest, index) => (
-                        <UICheckBox className="column" key={index} label={interest["name"]} sub={interest["type"]} value={interest["name"]} checked={interest["checked"]} onClick={() => checkboxOnClick(index)} readOnly disabled={disableInterest} />
+                        <UICheckBox className="column" key={index} label={interest["name"]} sub={interest["type"]} value={interest["name"]} checked={interest["checked"]} highlight={password.interests.findIndex(x => x.name === interest.name && x.type === interest.type) !== -1 ? "bg-green" : null} onClick={() => checkboxOnClick(index)} readOnly disabled={disableInterest} />
                     ))}
                 </div>
             </form>

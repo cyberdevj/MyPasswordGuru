@@ -91,3 +91,7 @@ div [class*="right floated"] {
 .ui.cards > .highlight {
     background-color: #e5f9e7;
 }
+
+.bg-green {
+    background-color: #32CD32 !important;
+}
