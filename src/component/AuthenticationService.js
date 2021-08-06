@@ -158,12 +158,8 @@ const AuthenticationService = {
     },
     getUser: function() {
         let data = getAuthObj();
-        if (!data)
-            return null;
-
-        if (!("username" in data))
-            return null;
-
+        if (!data) return null;
+        if (!("username" in data)) return null;
         return OKStatus(data["username"]);
     },
     generateEncryptedAuthObj: function(authObj, key, callback) {
@@ -198,7 +194,7 @@ const AuthenticationService = {
         let data = getAuthItem();
         delete data[key];
 
-        let authObj = getAuthItem();
+        let authObj = getAuthObj();
         authObj["data"] = data;
         encryptAndStore(authObj, localStorage.getItem("sessionKey"), getAuthSalt());
     },

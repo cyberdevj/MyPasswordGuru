@@ -40,7 +40,7 @@ const Main = () => {
     return (
         <div className="ui center-screen">
             <h1 className="ui header">
-                <div className="content">Password Guru</div>
+                <div className="content">Guru - Smart Password Manager</div>
             </h1>
             <div className="ui green message" hidden={!username}>Locked account as {username}</div>
             <div className="ui form">
