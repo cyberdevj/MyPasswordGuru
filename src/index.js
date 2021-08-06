@@ -18,7 +18,6 @@ import GeneratePassword from './component/GeneratePassword';
 import Account from './component/Account';
 import AccountInterest from './component/AccountInterest';
 import AccountNew from './component/AccountNew';
-import Personalize from './component/Personalize';
 
 
 const App = () => {
@@ -48,11 +47,6 @@ const App = () => {
                 <Route path="/generate/password">
                     <Nav>
                         <GeneratePassword />
-                    </Nav>
-                </Route>
-                <Route path="/account/personalize">
-                    <Nav>
-                        <Personalize />
                     </Nav>
                 </Route>
                 <Route path="/account/interest">
