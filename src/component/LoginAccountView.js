@@ -7,7 +7,7 @@ import AuthenticationService from "./AuthenticationService";
 
 const LoginAccountView = () => {
     const [login, setLogin] = useState({});
-    const [copyLabel, setCopyLabel] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
 
     const history = useHistory();
     const params = useParams();
@@ -23,15 +23,21 @@ const LoginAccountView = () => {
         history.push("/login/list");
     };
 
-    const copyToClipboard = () => {
-        if (copyLabel) return;
+    const copyToClipboard = (e) => {
+        e.preventDefault();
+        if (isCopied) return;
         navigator.clipboard.writeText(login["password"]);
 
-        setCopyLabel(true);
+        setIsCopied(true);
         setTimeout(() => {
-            setCopyLabel(false);
+            setIsCopied(false);
         }, 2000);
-    }
+    };
+
+    const goToUrl = (e) => {
+        e.preventDefault();
+        window.open(AuthenticationService.getHttps(login["url"]), "_blank");
+    };
 
     useEffect(() => {
         let logins = AuthenticationService.get("logins");
@@ -53,21 +59,30 @@ const LoginAccountView = () => {
             <UISegmentWithProfilePicture src={AuthenticationService.getFaviconUrl(login["url"])}>
                 <div className="header">{login["name"]}</div>
                 <div className="description">
-                    <a className="ui fluid button" href={AuthenticationService.getHttps(login["url"])} target="_black">Go to Login Page</a>
+                    <button className="ui fluid button" onClick={e => goToUrl(e)}>Go to Login Page</button>
                 </div>
             </UISegmentWithProfilePicture>
 
             <UISegmentWithHeader header="Credentials">
                 <UITextField label="Username" type="text" name="username" value={login["username"] ? login["username"] : ""} isReadOnly={true} />
-                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} iconCss="copy outline link icon" iconOnClick={() => copyToClipboard()} iconLabel="Copied!" showIconLabel={copyLabel} isReadOnly={true} />
+                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} isReadOnly={true}>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                        <i className={`copy link icon`}></i>
+                        {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                    </button>
+                </UITextField>
             </UISegmentWithHeader>
 
             <UISegmentWithHeader header="One Time Password">
                 <UITextField type="text" name="oneTimePassword" value={login["otp"] ? login["otp"] : ""} isReadOnly={true} />
             </UISegmentWithHeader>
             
-            <UISegmentWithHeader header="URI">
-                <UITextField type="text" name="uri1" value={login["url"] ? login["url"] : ""} iconCss="external alternate link icon" iconOnClick={() => window.open(AuthenticationService.getHttps(login["url"]), "_blank")} isReadOnly={true} />
+            <UISegmentWithHeader header="URL">
+                <UITextField type="text" name="url" value={login["url"] ? login["url"] : ""} isReadOnly={true}>
+                    <button className="ui icon button" onClick={e => goToUrl(e)}>
+                        <i className={`share square icon`}></i>
+                    </button>
+                </UITextField>
             </UISegmentWithHeader>
 
             <Link className="ui icon button positive" to={`/login/edit/${login["id"]}`}><i className="edit outline icon"></i></Link>

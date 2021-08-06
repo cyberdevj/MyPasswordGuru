@@ -14,7 +14,7 @@ const LoginAccountEdit = () => {
     const [url, setUrl] = useState("");
     const [prevlink, setPrevlink] = useState("/login/list");
 
-    const [copyLabel, setCopyLabel] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
 
     const history = useHistory();
     const location = useLocation().pathname;
@@ -82,15 +82,26 @@ const LoginAccountEdit = () => {
             addLogin();
     };
 
-    const copyToClipboard = () => {
-        if (copyLabel) return;
+    const copyToClipboard = (e) => {
+        e.preventDefault();
+        if (isCopied) return;
         navigator.clipboard.writeText(password);
 
-        setCopyLabel(true);
+        setIsCopied(true);
         setTimeout(() => {
-            setCopyLabel(false);
+            setIsCopied(false);
         }, 2000);
-    }
+    };
+
+    const goToGenerator = (e) => {
+        e.preventDefault();
+        history.push(`/generate/password/${params["id"]}`);
+    };
+
+    const goToUrl = (e) => {
+        e.preventDefault();
+        window.open(AuthenticationService.getHttps(url), "_blank");
+    };
 
     useEffect(() => {
         if (!isEdit())
@@ -124,7 +135,15 @@ const LoginAccountEdit = () => {
 
         <UISegmentWithHeader header="Credentials">
             <UITextField label="Username" type="text" name="username" value={username} onChange={e => setUsername(e.target.value)} />
-            <UITextField label="Password" type="password" name="password" iconCss="copy outline link icon" iconOnClick={() => copyToClipboard()} iconLabel="Copied!" showIconLabel={copyLabel} value={password} onChange={e => setPassword(e.target.value)} />
+            <UITextField label="Password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}>
+                <button className="ui icon button" onClick={e => goToGenerator(e)}>
+                    <i className={`sync link icon`}></i>
+                </button>
+                <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                    <i className={`copy link icon`}></i>
+                    {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                </button>
+            </UITextField>
         </UISegmentWithHeader>
 
         <UISegmentWithHeader header="One Time Password">
@@ -132,7 +151,11 @@ const LoginAccountEdit = () => {
         </UISegmentWithHeader>
         
         <UISegmentWithHeader header="URL">
-            <UITextField type="text" name="uri" iconCss="external alternate link icon" value={url} onChange={e => setUrl(e.target.value)} iconOnClick={() => window.open(AuthenticationService.getHttps(url), "_blank")} />
+            <UITextField type="text" name="url" value={url} onChange={e => setUrl(e.target.value)}>
+                <button className="ui icon button" onClick={e => goToUrl(e)}>
+                    <i className={`share square icon`}></i>
+                </button>
+            </UITextField>
         </UISegmentWithHeader>
 
         <div className="ui right floated">
