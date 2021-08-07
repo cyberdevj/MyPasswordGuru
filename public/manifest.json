@@ -1,7 +1,7 @@
 {
 	"name": "Guru - Smart Password Manager",
 	"description": "A smart password manager with a password generator that adapts to your usage.",
-	"version": "1.9.0",
+	"version": "1.9.1",
 	"manifest_version": 3,
 	"permissions": [],
 	"action": {

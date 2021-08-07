@@ -4,6 +4,7 @@ import UISegment from "./UISegment";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
 import AuthenticationService from "./AuthenticationService";
+import GeneratorService from "./GeneratorService";
 
 const LoginAccountEdit = () => {
     const [title, setTitle] = useState("Add New Login");
@@ -95,7 +96,8 @@ const LoginAccountEdit = () => {
 
     const goToGenerator = (e) => {
         e.preventDefault();
-        history.push(`/generate/password/${params["id"]}`);
+        GeneratorService.setUpdateState("R", params["id"]);
+        history.push(`/generate/password`);
     };
 
     const goToUrl = (e) => {
@@ -122,6 +124,16 @@ const LoginAccountEdit = () => {
         setPrevlink("/login/view");
         setTitle("Edit Login");
     }, [history, params, isEdit]);
+
+    useEffect(() => {
+        let localUpdateState = GeneratorService.getUpdateState();
+        console.log(localUpdateState);
+        if (localUpdateState["state"] === "S") {
+            let lastPassword = GeneratorService.getLastGeneratedPassword();
+            setPassword(lastPassword.new.join(''));
+            GeneratorService.setUpdateState(null, null);
+        }
+    }, []);
 
     return (
         <form className="ui form">

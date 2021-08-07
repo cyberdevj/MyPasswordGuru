@@ -44,11 +44,6 @@ const App = () => {
                         <LoginAccountList />
                     </Nav>
                 </Route>
-                <Route path="/generate/password/:id">
-                    <Nav>
-                        <GeneratePassword />
-                    </Nav>
-                </Route>
                 <Route path="/generate/password">
                     <Nav>
                         <GeneratePassword />

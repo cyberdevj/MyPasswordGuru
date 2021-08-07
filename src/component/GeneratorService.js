@@ -28,6 +28,11 @@ const specialCharacterMapping = {
     'i': ['!'],
     'l': ['!']
 };
+let updateState = {
+    id: null,
+    state: null
+};
+let lastPassword = {};
 let interests = [];
 let training = [];
 let randomInterest = {
@@ -225,6 +230,7 @@ const GeneratorService = {
         let randomInterest = getRandomInterest(interests, options);
         let password = buildPassword(options, randomInterest);
 
+        lastPassword = password;
         return password;
     },
     saveInterestWeight: function() {
@@ -242,8 +248,19 @@ const GeneratorService = {
             let i = training.findIndex(x => v.name === x.name && v.type === x.type);
             if (training[i].weight > 1) training[i].weight--;
         });
-        console.log(training);
         AuthenticationService.set("training", training);
+    },
+    getLastGeneratedPassword: function() {
+        return lastPassword;
+    },
+    setUpdateState: function(state, id) {
+        updateState = {
+            id: id,
+            state: state
+        };
+    },
+    getUpdateState: function() {
+        return updateState;
     }
 };
 

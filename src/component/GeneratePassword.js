@@ -24,6 +24,10 @@ const GeneratePassword = () => {
     const [disableInterest, setDisableInterest] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
     const [copiedText, setCopiedText] = useState("");
+    const [updateState, setUpdateState] = useState({
+        id: null,
+        state: null
+    });
 
     const history = useHistory();
 
@@ -100,6 +104,13 @@ const GeneratePassword = () => {
         GeneratorService.saveInterestWeight();
     };
 
+    const savePassword = (e, type) => {
+        e.preventDefault();
+        GeneratorService.setUpdateState(type);
+        GeneratorService.saveInterestWeight();
+        history.push(`/login/edit/${updateState.id}`);
+    };
+
     const loadInterests = useCallback(() => {
         let data = AuthenticationService.get("interests");
         if (data["status"] !== "OK") {
@@ -119,6 +130,7 @@ const GeneratePassword = () => {
 
     useEffect(() => {
         loadInterests();
+        setUpdateState(GeneratorService.getUpdateState());
     }, [loadInterests]);
     
     useEffect(() => {
@@ -135,6 +147,10 @@ const GeneratePassword = () => {
                 <PasswordNew value={password} onChange={e => setPassword(e.target.value)} copyOnClick={() => copyToClipboard()} isCopied={isCopied} />
                 <br />
                 <button className="ui fluid button blue" type="button" onClick={generateNewPassword}>Generate</button>
+                <br />
+                {updateState.state === "R" ? <button className="ui fluid button green" onClick={e => savePassword(e, "S")}>Use This Password</button> : null}
+                <br />
+                {updateState.state === "R" ? <button className="ui fluid button red" onClick={e => savePassword(e, "C")}>Cancel</button> : null}
                 <h3 className="ui header">
                     <div className="content">Options</div>
                     <div className="sub header">Customize how we should generate your password.</div>
