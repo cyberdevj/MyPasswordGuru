@@ -120,21 +120,20 @@ const getRandomInterest = (interests, options) => {
         encoded: []
     };
 
-    while (randomInterest.original.map(v => v.name).join('').length < options.length) {
+    let timeoutCounter = 0
+    while (randomInterest.original.map(v => v.name).join('').length < options.length && timeoutCounter < 10) {
         let temp = getWeightedRandom(interests);
-        
-        randomInterest.original.push({
-            name: temp.name,
-            type: temp.type,
-            weight: temp.weight
-        });
+        if (randomInterest.original.findIndex(x => x.name === temp.name && x.type === temp.type) === -1) {
+            randomInterest.original.push({
+                name: temp.name,
+                type: temp.type,
+                weight: temp.weight
+            });
+        } else {
+            timeoutCounter++;
+        }
     }
     randomInterest.original.pop();
-    // randomInterest.original.forEach(() => {
-    //     if (randomInterest.original.length > 1 && Math.random() > 0.5) {
-    //         randomInterest.original.pop();
-    //     }
-    // });
 
     randomInterest.original.forEach((v, i) => {
         randomInterest.encoded.push(v.name);

@@ -145,12 +145,10 @@ const GeneratePassword = () => {
             <br />
             <form className="ui form" spellCheck="false">
                 <PasswordNew value={password} onChange={e => setPassword(e.target.value)} copyOnClick={() => copyToClipboard()} isCopied={isCopied} />
-                <br />
-                <button className="ui fluid button blue" type="button" onClick={generateNewPassword}>Generate</button>
-                <br />
-                {updateState.state === "R" ? <button className="ui fluid button green" onClick={e => savePassword(e, "S")}>Use This Password</button> : null}
-                <br />
-                {updateState.state === "R" ? <button className="ui fluid button red" onClick={e => savePassword(e, "C")}>Cancel</button> : null}
+                {password.interests && password.interests.length > 0 ? <div className="mt-10">{password.interests.map((v, i) => <div key={i} className="ui red label">{v.name}</div>)}</div> : null}
+                <div className="mt-10"><button className="ui fluid button blue" type="button" onClick={generateNewPassword}>Generate</button></div>
+                {updateState.state === "R" ? (<div className="mt-10"><button className="ui fluid button green" onClick={e => savePassword(e, "S")}>Use This Password</button></div>) : null}
+                {updateState.state === "R" ? (<div className="mt-10"><button className="ui fluid button red" onClick={e => savePassword(e, "C")}>Cancel</button></div>) : null}
                 <h3 className="ui header">
                     <div className="content">Options</div>
                     <div className="sub header">Customize how we should generate your password.</div>

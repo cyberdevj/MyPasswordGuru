@@ -60,6 +60,10 @@ div [class*="right floated"] {
     width: 100%;
 }
 
+.mt-10 {
+    margin-top: 10px;
+}
+
 .mt-50 {
     margin-top: 50px;
 }
