@@ -29,8 +29,8 @@ const specialCharacterMapping = {
     'l': ['!']
 };
 let updateState = {
-    id: null,
-    state: null
+    state: null,
+    data: null
 };
 let lastPassword = {};
 let interests = [];
@@ -252,10 +252,11 @@ const GeneratorService = {
     getLastGeneratedPassword: function() {
         return lastPassword;
     },
-    setUpdateState: function(state, id) {
+    setUpdateState: function(state, data) {
+        if (!data) data = updateState.data;
         updateState = {
-            id: id,
-            state: state
+            state: state,
+            data: data
         };
     },
     getUpdateState: function() {

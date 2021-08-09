@@ -108,7 +108,8 @@ const GeneratePassword = () => {
         e.preventDefault();
         GeneratorService.setUpdateState(type);
         GeneratorService.saveInterestWeight();
-        history.push(`/login/edit/${updateState.id}`);
+        let url = `/login/${updateState.data.id ? `edit/${updateState.data.id}` : `new`}`;
+        history.push(url);
     };
 
     const loadInterests = useCallback(() => {

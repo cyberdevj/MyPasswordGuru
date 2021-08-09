@@ -97,7 +97,13 @@ const LoginAccountEdit = () => {
     
     const goToGenerator = (e) => {
         e.preventDefault();
-        GeneratorService.setUpdateState("R", params["id"]);
+        GeneratorService.setUpdateState("R", {
+            id: params["id"] ? params["id"] : null,
+            name: name,
+            username: username,
+            url: url,
+            otp: otp
+        });
         history.push(`/generate/password`);
     };
 
@@ -128,7 +134,12 @@ const LoginAccountEdit = () => {
 
     useEffect(() => {
         let localUpdateState = GeneratorService.getUpdateState();
-        console.log(localUpdateState);
+        if (localUpdateState["data"]) {
+            setName(localUpdateState["data"]["name"] ? localUpdateState["data"]["name"] : "");
+            setUsername(localUpdateState["data"]["username"] ? localUpdateState["data"]["username"] : "");
+            setOtp(localUpdateState["data"]["otp"] ? localUpdateState["data"]["otp"] : "");
+            setUrl(localUpdateState["data"]["url"] ? localUpdateState["data"]["url"] : "");
+        }
         if (localUpdateState["state"] === "S") {
             let lastPassword = GeneratorService.getLastGeneratedPassword();
             setPassword(lastPassword.new.join(''));
