@@ -140,7 +140,6 @@ const Account = () => {
                         }
                     }
                 });
-                console.log(loginAccounts);
                 let data = AuthenticationService.get("logins");
                 data = data["data"];
 
@@ -177,10 +176,6 @@ const Account = () => {
         csvContent += Papa.unparse(data, {
             header: false
         });
-        // csvContent += data.map(x => {
-        //     x.name = x.name.includex(",") ? `"${x.name}"` : 
-        //     return `${x.name},${x.url},${x.username},${x.password},${x.otp}`
-        // }).join("\r\n");
         
         let encodedUri = encodeURI(csvContent);
         let link = document.createElement("a");
