@@ -133,7 +133,7 @@ const getRandomInterest = (interests, options) => {
             timeoutCounter++;
         }
     }
-    randomInterest.original.pop();
+    if (randomInterest.original.map(v => v.name).join('').length > options.length) randomInterest.original.pop();
 
     randomInterest.original.forEach((v, i) => {
         randomInterest.encoded.push(v.name);
