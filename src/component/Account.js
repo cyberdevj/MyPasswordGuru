@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import Papa from "papaparse";
 import AuthenticationService from "./AuthenticationService";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
@@ -22,6 +23,8 @@ const Account = () => {
     const [pinError, setPinError] = useState(false);
 
     const [interests, setInterests] = useState([]);
+
+    const [importStatus, setImportStatus] = useState(false);
 
     const history = useHistory();
 
@@ -85,6 +88,108 @@ const Account = () => {
                 </div>
             )
         }
+    };
+
+    const importGuru = (e) => {
+        e.preventDefault();
+        if (importStatus) return;
+
+        let input = document.createElement("input");
+        input.type = "file";
+        input.onchange = e => {
+            let file = e.target.files[0];
+
+            let reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+
+            reader.onload = readerEvent => {
+                let content = readerEvent.target.result;
+                let loginAccounts = [];
+                let index = {
+                    name: -1,
+                    url: -1,
+                    username: -1,
+                    password: -1,
+                    otp: -1
+                };
+                content.split("\r\n").forEach((row, i1) => {
+                    if (i1 === 0) {
+                        row.split(",").map((col, i2) => {
+                            if (col.toLowerCase() === "name") index.name = i2;
+                            if (col.toLowerCase() === "title") index.name = i2;
+                            if (col.toLowerCase() === "url") index.url = i2;
+                            if (col.toLowerCase() === "loginurl") index.url = i2;
+                            if (col.toLowerCase() === "username") index.username = i2;
+                            if (col.toLowerCase() === "password") index.password = i2;
+                            if (col.toLowerCase() === "otpsecret") index.otp = i2;
+                            if (col.toLowerCase() === "otpauth") index.otp = i2;
+                            return null;
+                        });
+                    } else {
+                        let rowParse = Papa.parse(row);
+                        rowParse = rowParse["data"][0];
+                        if (rowParse) {
+                            let loginItem = {
+                                name: rowParse[index.name] ? rowParse[index.name] : "",
+                                url: rowParse[index.url] ? rowParse[index.url] : "",
+                                username: rowParse[index.username] ? rowParse[index.username] : "",
+                                password: rowParse[index.password] ? rowParse[index.password] : "",
+                                otp: rowParse[index.otp] ? rowParse[index.otp] : ""
+                            };
+                            loginAccounts.push(loginItem);
+                        }
+                    }
+                });
+                console.log(loginAccounts);
+                let data = AuthenticationService.get("logins");
+                data = data["data"];
+
+                loginAccounts.forEach(x1 => {
+                    data.splice(data.findIndex(x2 => x1.name === x2.name && x1.type === x2.type), 1);
+                });
+                loginAccounts = [...loginAccounts, ...data];
+                loginAccounts.forEach((v, i) => {
+                    v["id"] = (i + 1);
+                });
+                AuthenticationService.set("logins", loginAccounts);
+                setImportStatus(true);
+                setTimeout(() => {
+                    setImportStatus(false);
+                }, 1000)
+            }
+        }
+        input.click();
+        
+    };
+
+    const exportGuru = (e) => {
+        e.preventDefault();
+
+        let data = AuthenticationService.get("logins");
+        if (data["status"] !== "OK") {
+            AuthenticationService.sessionDestroy();
+            history.push("/");
+        }
+        data = data["data"].map(({id, ...keepAttrs}) => keepAttrs);
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Title,Url,Username,Password,OTPAuth\r\n";
+        csvContent += Papa.unparse(data, {
+            header: false
+        });
+        // csvContent += data.map(x => {
+        //     x.name = x.name.includex(",") ? `"${x.name}"` : 
+        //     return `${x.name},${x.url},${x.username},${x.password},${x.otp}`
+        // }).join("\r\n");
+        
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Guru_Export.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        link.remove();
     };
 
     const clearTrainingData = (e) => {
@@ -167,6 +272,18 @@ const Account = () => {
                 {renderInterest()}
                 <br />
                 <Link className="ui button blue fluid" to="/account/interest">Manage</Link>
+            </UISegmentWithHeader>
+
+            <UISegmentWithHeader header="Import / Export">
+                {importStatus ? <div className="ui message green">Data successfully imported!</div> : null}
+                <div className="ui two column grid">
+                    <div className="column">
+                        <button className="ui button blue fluid" onClick={e => importGuru(e)}>Import</button>
+                    </div>
+                    <div className="column">
+                        <button className="ui button blue fluid" onClick={e => exportGuru(e)}>Export</button>
+                    </div>
+                </div>
             </UISegmentWithHeader>
             
             <button className="ui button fluid" onClick={e => clearTrainingData(e)}>Clear Training Data</button>
