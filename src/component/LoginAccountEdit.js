@@ -16,6 +16,7 @@ const LoginAccountEdit = () => {
     const [prevlink, setPrevlink] = useState("/login/list");
 
     const [isCopied, setIsCopied] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const history = useHistory();
     const location = useLocation().pathname;
@@ -93,7 +94,7 @@ const LoginAccountEdit = () => {
             setIsCopied(false);
         }, 2000);
     };
-
+    
     const goToGenerator = (e) => {
         e.preventDefault();
         GeneratorService.setUpdateState("R", params["id"]);
@@ -147,15 +148,32 @@ const LoginAccountEdit = () => {
 
         <UISegmentWithHeader header="Credentials">
             <UITextField label="Username" type="text" name="username" value={username} onChange={e => setUsername(e.target.value)} />
-            <UITextField label="Password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}>
-                <button className="ui icon button" onClick={e => goToGenerator(e)}>
-                    <i className={`sync link icon`}></i>
-                </button>
-                <button className="ui icon button" onClick={e => copyToClipboard(e)}>
-                    <i className={`copy link icon`}></i>
-                    {isCopied ? <div className="floating ui label">Copied!</div> : null}
-                </button>
-            </UITextField>
+            {!showPassword ?
+                <UITextField label="Password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}>
+                    <div className="ui icon button" onClick={e => setShowPassword(!showPassword)}>
+                        <i className={`eye slash outline link icon`}></i>
+                    </div>
+                    <button className="ui icon button" onClick={e => goToGenerator(e)}>
+                        <i className={`sync link icon`}></i>
+                    </button>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                        <i className={`copy link icon`}></i>
+                        {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                    </button>
+                </UITextField> :
+                <UITextField label="Password" type="text" name="password" value={password} onChange={e => setPassword(e.target.value)}>
+                    <div className="ui icon button" onClick={e => setShowPassword(!showPassword)}>
+                        <i className={`eye slash outline link icon`}></i>
+                    </div>
+                    <button className="ui icon button" onClick={e => goToGenerator(e)}>
+                        <i className={`sync link icon`}></i>
+                    </button>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                        <i className={`copy link icon`}></i>
+                        {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                    </button>
+                </UITextField>
+            }
         </UISegmentWithHeader>
 
         <UISegmentWithHeader header="One Time Password">
