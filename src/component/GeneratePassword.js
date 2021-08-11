@@ -10,7 +10,7 @@ import UITextField from "./UITextField";
 const GeneratePassword = () => {
     const [password, setPassword] = useState({});
     const [options, setOptions] = useState({
-        length: 8,
+        length: 10,
         uppercase: true,
         lowercase: true,
         numbers: true,

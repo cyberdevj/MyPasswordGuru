@@ -239,7 +239,7 @@ const GeneratorService = {
 
         randomInterest.original.forEach(v1 => {
             let i = training.findIndex(x => v1.name === x.name && v1.type === x.type);
-            training[i].weight++;
+            if (training[i].weight < 10) training[i].weight+=2;
             interests = interests.filter(v2 => {return !(v1.name === v2.name && v1.type === v2.type)})
         });
 
