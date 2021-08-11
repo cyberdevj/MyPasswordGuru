@@ -45,16 +45,16 @@ const GeneratePassword = () => {
 
     const handleNumberChange = (e, key) => {
         let temp = {...options};
-        let value = parseInt(e.target.value);
+        let value = e.target.value;
         let requiredPasswordLength = 0;
         if (temp.uppercase) requiredPasswordLength++;
         if (temp.lowercase) requiredPasswordLength++;
         if (temp.special)   requiredPasswordLength++;
-
         if (!/^[0-9]+$/.test(value)) {
             e.preventDefault();
             return;
         }
+        value = parseInt(e.target.value);
 
         if ((key === "numbers" || key === "special") && value >= MIN_CHARACTERS && value <= MAX_CHARACTERS) {
             temp.default[key] = value;
