@@ -141,7 +141,7 @@ const Account = () => {
                     }
                 });
                 let data = AuthenticationService.get("logins");
-                data = data["data"];
+                data = data["data"] ? data["data"] : [];
 
                 loginAccounts.forEach(x1 => {
                     data.splice(data.findIndex(x2 => x1.name === x2.name && x1.type === x2.type), 1);
@@ -280,7 +280,6 @@ const Account = () => {
                     </div>
                 </div>
             </UISegmentWithHeader>
-            
             <button className="ui button fluid" onClick={e => clearTrainingData(e)}>Clear Training Data</button>
         </form>
     );
