@@ -172,7 +172,7 @@ const GeneratePassword = () => {
                 <div className="ui one column grid">
                     <UICheckBox className="column" label="Interests" onClick={() => setInterestCheckbox()} disabled={!(options.uppercase || options.lowercase)} checked={!disableInterest} readOnly />
                 </div>
-                <div className="ui three column grid">
+                <div className="ui two column grid">
                     {interests.map((interest, index) => (
                         <UICheckBox className="column" key={index} label={interest["name"]} sub={interest["type"]} value={interest["name"]} checked={interest["checked"]} highlight={password.interests.findIndex(x => x.name === interest.name && x.type === interest.type) !== -1 ? "bg-green" : null} onClick={() => checkboxOnClick(index)} readOnly disabled={disableInterest} />
                     ))}

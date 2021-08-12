@@ -4,7 +4,7 @@ import UISegmentWithProfilePicture from "./UISegmentWithProfilePicture";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
 import AuthenticationService from "./AuthenticationService";
-import { authenticator, totp } from "otplib";
+import { totp } from "otplib";
 
 const LoginAccountView = () => {
     const [login, setLogin] = useState({});

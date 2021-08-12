@@ -7,6 +7,7 @@ import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
 import UICardItem from "./UICardItem";
 import UICountryField from "./UICountryField";
+import { Card } from "semantic-ui-react";
 
 const Account = () => {
     const [fullname, setFullname] = useState("");
@@ -76,18 +77,6 @@ const Account = () => {
 
         setPinStatus("PIN Changed");
         pinTimeoutStatus();
-    };
-
-    const renderInterest = () => {
-        if (interests.length === 0) {
-            return <div className="ui message yellow">No interest selected yet</div>;
-        } else {
-            return (
-                <div className="ui cards h-400 overflow">
-                    {interests.map((interest, index) => <UICardItem key={index} title={interest.name} meta={interest.type} />)}
-                </div>
-            )
-        }
     };
 
     const importGuru = (e) => {
@@ -263,12 +252,6 @@ const Account = () => {
                 {pinStatus ? <small style={ !pinError ? {"color": "green"} : {"color": "red"}}>{pinStatus}</small> : null}
             </UISegmentWithHeader>
 
-            <UISegmentWithHeader header="Interest" >
-                {renderInterest()}
-                <br />
-                <Link className="ui button blue fluid" to="/account/interest">Manage</Link>
-            </UISegmentWithHeader>
-
             <UISegmentWithHeader header="Import / Export">
                 {importStatus ? <div className="ui message green">Data successfully imported!</div> : null}
                 <div className="ui two column grid">
@@ -280,6 +263,18 @@ const Account = () => {
                     </div>
                 </div>
             </UISegmentWithHeader>
+
+
+            <UISegmentWithHeader header="Interest" >
+                {interests.length > 0 ? (
+                    <Card.Group>
+                        {interests.map((interest, index) => <UICardItem className="column" key={index} title={interest.name} meta={interest.type} />)}
+                    </Card.Group>
+                ) : <div className="ui message yellow">No interest selected yet</div>}
+                <br />
+                <Link className="ui button blue fluid" to="/account/interest">Manage</Link>
+            </UISegmentWithHeader>
+
             <button className="ui button fluid" onClick={e => clearTrainingData(e)}>Clear Training Data</button>
         </form>
     );
