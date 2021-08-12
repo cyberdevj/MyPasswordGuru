@@ -15,7 +15,8 @@ const LoginAccountEdit = () => {
     const [url, setUrl] = useState("");
     const [prevlink, setPrevlink] = useState("/login/list");
 
-    const [isCopied, setIsCopied] = useState(false);
+    const [usernameCopied, setUsernameCopied] = useState(false);
+    const [passwordCopied, setPasswordCopied] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const history = useHistory();
@@ -84,15 +85,17 @@ const LoginAccountEdit = () => {
             addLogin();
     };
 
-    const copyToClipboard = (e) => {
+    const copyToClipboard = (e, key, value) => {
         e.preventDefault();
-        if (isCopied) return;
-        navigator.clipboard.writeText(password);
-
-        setIsCopied(true);
+        navigator.clipboard.writeText(value);
+        if (key === "username" && usernameCopied) return;
+        if (key === "password" && passwordCopied) return;
+        if (key === "username") setUsernameCopied(true);
+        if (key === "password") setPasswordCopied(true);
         setTimeout(() => {
-            setIsCopied(false);
-        }, 2000);
+            setUsernameCopied(false);
+            setPasswordCopied(false);
+        }, 1000);
     };
     
     const goToGenerator = (e) => {
@@ -158,7 +161,12 @@ const LoginAccountEdit = () => {
         </UISegment>
 
         <UISegmentWithHeader header="Credentials">
-            <UITextField label="Username" type="text" name="username" value={username} onChange={e => setUsername(e.target.value)} />
+            <UITextField label="Username" type="text" name="username" value={username} onChange={e => setUsername(e.target.value)}>
+                <button className="ui icon button" onClick={e => copyToClipboard(e, "username", username)}>
+                    <i className={`copy link icon`}></i>
+                    {usernameCopied ? <div className="floating ui label">Copied!</div> : null}
+                </button>
+            </UITextField>
             {!showPassword ?
                 <UITextField label="Password" type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}>
                     <div className="ui icon button" onClick={e => setShowPassword(!showPassword)}>
@@ -167,9 +175,9 @@ const LoginAccountEdit = () => {
                     <button className="ui icon button" onClick={e => goToGenerator(e)}>
                         <i className={`sync link icon`}></i>
                     </button>
-                    <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e, "password", password)}>
                         <i className={`copy link icon`}></i>
-                        {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                        {passwordCopied ? <div className="floating ui label">Copied!</div> : null}
                     </button>
                 </UITextField> :
                 <UITextField label="Password" type="text" name="password" value={password} onChange={e => setPassword(e.target.value)}>
@@ -179,15 +187,15 @@ const LoginAccountEdit = () => {
                     <button className="ui icon button" onClick={e => goToGenerator(e)}>
                         <i className={`sync link icon`}></i>
                     </button>
-                    <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e, "password", password)}>
                         <i className={`copy link icon`}></i>
-                        {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                        {passwordCopied ? <div className="floating ui label">Copied!</div> : null}
                     </button>
                 </UITextField>
             }
         </UISegmentWithHeader>
 
-        <UISegmentWithHeader header="One Time Password">
+        <UISegmentWithHeader header="One Time Password (TOTP)">
             <UITextField type="text" name="oneTimePassword" value={otp} onChange={e => setOtp(e.target.value)} />
         </UISegmentWithHeader>
         
@@ -201,7 +209,7 @@ const LoginAccountEdit = () => {
 
         <div className="ui right floated">
             <button className="ui icon button positive" onClick={processLogin}><i className="save outline icon"></i></button>
-            <Link className="ui icon button" to={prevlink}><i className="window close outline icon"></i></Link>
+            <Link className="ui icon button" to={`${prevlink}/${params["id"]}`}><i className="window close outline icon"></i></Link>
         </div>
     </form>
     );

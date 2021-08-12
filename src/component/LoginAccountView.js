@@ -4,13 +4,21 @@ import UISegmentWithProfilePicture from "./UISegmentWithProfilePicture";
 import UISegmentWithHeader from "./UISegmentWithHeader";
 import UITextField from "./UITextField";
 import AuthenticationService from "./AuthenticationService";
+import { authenticator, totp } from "otplib";
 
 const LoginAccountView = () => {
     const [login, setLogin] = useState({});
-    const [isCopied, setIsCopied] = useState(false);
+    const [usernameCopied, setUsernameCopied] = useState(false);
+    const [passwordCopied, setPasswordCopied] = useState(false);
+    const [otpCopied, setOtpCopied] = useState(false);
+    
+    const [otpPercent, setOtpPercent] = useState(0);
+    const [otpSecret, setOtpSecret] = useState("");
+    const [otpPin, setOtpPin] = useState("");
 
     const history = useHistory();
     const params = useParams();
+
 
     const deleteLogin = (e) => {
         e.preventDefault();
@@ -23,15 +31,20 @@ const LoginAccountView = () => {
         history.push("/login/list");
     };
 
-    const copyToClipboard = (e) => {
+    const copyToClipboard = (e, key, value) => {
         e.preventDefault();
-        if (isCopied) return;
-        navigator.clipboard.writeText(login["password"]);
-
-        setIsCopied(true);
+        navigator.clipboard.writeText(value);
+        if (key === "username" && usernameCopied) return;
+        if (key === "password" && passwordCopied) return;
+        if (key === "otp" && otpCopied) return;
+        if (key === "username") setUsernameCopied(true);
+        if (key === "password") setPasswordCopied(true);
+        if (key === "otp") setOtpCopied(true);
         setTimeout(() => {
-            setIsCopied(false);
-        }, 2000);
+            setUsernameCopied(false);
+            setPasswordCopied(false);
+            setOtpCopied(false);
+        }, 1000);
     };
 
     const goToUrl = (e) => {
@@ -45,10 +58,22 @@ const LoginAccountView = () => {
             AuthenticationService.sessionDestroy();
             history.push("/");
         }
-
+        
         let data = AuthenticationService.getItemFromList(params["id"], logins["data"]);
         setLogin(data);
+        setOtpSecret(data["otp"]);
     }, [history, params]);
+        
+    useEffect(() => {
+        if (!otpSecret) return;
+
+        const otpId = setInterval(() => {
+            setOtpPin(otpSecret ? totp.generate(otpSecret) : "");
+            setOtpPercent(100 / (totp.timeRemaining() + totp.timeUsed()) * totp.timeUsed());
+        }, 1000);
+
+        return () => clearInterval(otpId);
+    }, [otpSecret]);
 
     return (
         <form className="ui form">
@@ -64,17 +89,27 @@ const LoginAccountView = () => {
             </UISegmentWithProfilePicture>
 
             <UISegmentWithHeader header="Credentials">
-                <UITextField label="Username" type="text" name="username" value={login["username"] ? login["username"] : ""} isReadOnly={true} />
-                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} isReadOnly={true}>
-                    <button className="ui icon button" onClick={e => copyToClipboard(e)}>
+                <UITextField label="Username" type="text" name="username" value={login["username"] ? login["username"] : ""} isReadOnly={true}>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e, "username", login["username"])}>
                         <i className={`copy link icon`}></i>
-                        {isCopied ? <div className="floating ui label">Copied!</div> : null}
+                        {usernameCopied ? <div className="floating ui label">Copied!</div> : null}
+                    </button>
+                </UITextField>
+                <UITextField label="Password" type="password" name="username" value={login["password"] ? login["password"] : ""} isReadOnly={true}>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e, "password", login["password"])}>
+                        <i className={`copy link icon`}></i>
+                        {passwordCopied ? <div className="floating ui label">Copied!</div> : null}
                     </button>
                 </UITextField>
             </UISegmentWithHeader>
 
             <UISegmentWithHeader header="One Time Password">
-                <UITextField type="text" name="oneTimePassword" value={login["otp"] ? login["otp"] : ""} isReadOnly={true} />
+                <UITextField type="text" name="oneTimePassword" value={otpPin ? otpPin : ""} isReadOnly={true} percent={otpPercent}>
+                    <button className="ui icon button" onClick={e => copyToClipboard(e, "otp", otpPin)}>
+                        <i className={`copy link icon`}></i>
+                        {usernameCopied ? <div className="floating ui label">Copied!</div> : null}
+                    </button>
+                </UITextField>
             </UISegmentWithHeader>
             
             <UISegmentWithHeader header="URL">
