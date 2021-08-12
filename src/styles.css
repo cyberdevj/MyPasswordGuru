@@ -72,6 +72,10 @@ div [class*="right floated"] {
     width: 100%;
 }
 
+.w-50 {
+    width: 50%;
+}
+
 .mt-10 {
     margin-top: 10px;
 }
