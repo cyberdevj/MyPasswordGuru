@@ -28,10 +28,10 @@ const PasswordNew = (props) => {
             </h3>
             <div className="field">
                 <div className="ui grid">
-                    <div className="fifteen wide column">
+                    <div className="fourteen wide column">
                         {renderPassword(props.value)}
                     </div>
-                    <div className="one wide column">
+                    <div className="two wide column">
                         <i className="copy outline link icon" onClick={props.copyOnClick}></i>
                         {props.isCopied ? <div className="floating ui label">Copied!</div> : null}
                     </div>
