@@ -155,7 +155,7 @@ const GeneratePassword = () => {
                     <div className="sub header">Customize how we should generate your password.</div>
                 </h3>
                 <UIRange label="Length" type="number" min={MIN_LENGTH} max={MAX_LENGTH} value={options.length} onChange={e => handleNumberChange(e, "length")} />
-                <div className="ui four column grid">
+                <div className="ui two column grid">
                     <UICheckBox className="column" label="A-Z"          onClick={() => setOptionsCheckbox("uppercase")} checked={options.uppercase} readOnly />
                     <UICheckBox className="column" label="a-z"          onClick={() => setOptionsCheckbox("lowercase")} checked={options.lowercase} readOnly />
                     <UICheckBox className="column" label="0-9"          onClick={() => setOptionsCheckbox("numbers")}   checked={options.numbers}   readOnly />

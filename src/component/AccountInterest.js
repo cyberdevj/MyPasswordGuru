@@ -86,12 +86,12 @@ const AccountInterest = () => {
                 Your interest will be used as a factor to generate your new password.
             </div>
             <UISegmentWithHeader header="Manage Interest" backButton="true" backOnClick={() => goBack()}>
-                <div className="ui three column grid">
+                <div className="ui one column grid">
                     <div className="column">
                         <div className="ui sub header">
                             Interests Category
                         </div>
-                        <div className="ui segment h-400 overflow">
+                        <div className="ui segment h-150 overflow">
                             <div className="ui cards">
                                 {interestCategory.map((cat, index) => <UICardItem className={`fluid cursor-pointer ${cat.highlight ? "hightlight" : null}`} key={index} title={cat.name.charAt(0).toUpperCase() + cat.name.slice(1)} meta={cat.type} onClick={() => selectInterestType(index + 1)} />)}
                             </div>
@@ -101,9 +101,9 @@ const AccountInterest = () => {
                         <div className="ui sub header">
                             {currentInterest ? interestCategory[currentInterest - 1]["name"] : "Interest"}
                         </div>
-                        <div className="ui segment h-400 overflow">
+                        <div className="ui segment h-150 overflow">
                             <div className="ui cards">
-                                {currentInterest > 0 ? interestList.map((interest, index) => <UICardItem className="fluid cursor-pointer" key={index} title={interest.name.charAt(0).toUpperCase() + interest.name.slice(1)} meta={interest.type} onClick={() => addInterest(index)} />) : null}
+                                {currentInterest > 0 ? interestList.map((interest, index) => <UICardItem className="fluid cursor-pointer" key={index} title={interest.name.charAt(0).toUpperCase() + interest.name.slice(1)} onClick={() => addInterest(index)} />) : null}
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@ const AccountInterest = () => {
                         <div className="ui sub header">
                             Selected Interests
                         </div>
-                        <div className="ui segment h-400 overflow">
+                        <div className="ui segment h-150 overflow">
                             {selectedList.map((interest, index) => (
                                 <UICardItem className="fluid cursor-pointer" key={index} title={interest.name.charAt(0).toUpperCase() + interest.name.slice(1)} meta={interest.type} close="true" closeOnClick={() => deleteInterest(index)} />
                             ))}

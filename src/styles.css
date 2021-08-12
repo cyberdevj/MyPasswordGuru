@@ -1,7 +1,7 @@
 body {
     margin-left: auto;
     margin-right: auto;
-    width: 700px;
+    width: 350px;
     height: 500px;
     padding-top: 20px; 
 }
@@ -50,6 +50,14 @@ div [class*="right floated"] {
 
 .float-right {
     float: right;
+}
+
+.h-150 {
+    height: 150px;
+}
+
+.h-200 {
+    height: 200px;
 }
 
 .h-400 {
